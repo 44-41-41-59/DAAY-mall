@@ -11,9 +11,7 @@ function loginWithFacebook() {
       const {
         authResponse: { accessToken, userID },
       } = response;
-      FB.api(`/${userID}/?fields=id,name,email,picture`, 'GET', {}, function (
-        response
-      ) {
+      FB.api(`/${userID}/?fields=id,name,email,picture`, 'GET', {}, function (response) {
         let data = JSON.stringify(response);
         console.log(data);
       });
