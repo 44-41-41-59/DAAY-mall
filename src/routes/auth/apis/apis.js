@@ -7,8 +7,9 @@ const user = require('../../../DB/users/user-schema.js');
 async function signup(req, res, next) {
   let record;
   try {
+    console.log('---------------------------------------');
     let check = await userCollection.read(req.body);
-    if (check === 'this username has not sign up') {
+    if (check.status === 401) {
       record = await userCollection.create(req.body);
       res.send(record);
     } else {
