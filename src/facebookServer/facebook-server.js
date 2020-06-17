@@ -31,6 +31,7 @@ app.post('/login-with-facebook', async (req, res)=> {
         email: json.email,
         avatar: json.picture.data.url,
         facebookID: userID,
+        userSignInType: 'facebook',
         accessToken,
       });
 

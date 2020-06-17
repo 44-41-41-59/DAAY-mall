@@ -14,6 +14,13 @@ const user = Schema({
     enum: ['user', 'admin', 'owner'],
     toLowerCase: true,
   },
+  userSignInType:{
+    type: String,
+    default: 'auth',
+    enum: ['auth', 'facebook', 'google'],
+    toLowerCase: true,
+  },
+  facebookID: { type: String, required: false },
 },{toObject:{virtuals:true}},{toJSON:{virtuals:true}});
 
 user.virtual('review', {
