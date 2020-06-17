@@ -45,7 +45,7 @@ user.pre('save', async function (next) {
   try {
     let hashedPassword = await bcrypt.hash(this.password, 6);
     this.password = hashedPassword;
-    this.token = this.generateToken(this._id);
+    this.token = jwt.sign({ id: this._id }, SECRET, { expiresIn: '10d' });
     // await this.populate('acl').execPopulate();
     next();
   } catch (e) {
