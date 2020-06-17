@@ -1,10 +1,10 @@
 /* eslint-disable comma-dangle */
 'use strict';
-const { Schema, Model } = require('mongoose');
+const { Schema, model } = require('mongoose');
 const reviews = require('../subdocuments/reviews.js');
 const product = require('../product/product-schema.js');
 
-const Store = new Schema(
+const Store = Schema(
   {
     name: { type: String, required: true },
     logo: { type: String },
@@ -28,4 +28,4 @@ Store.virtual('review', {
   foreignField: 'storeID',
 });
 
-module.exports = new Model('store', Store);
+module.exports = model('store', Store);
