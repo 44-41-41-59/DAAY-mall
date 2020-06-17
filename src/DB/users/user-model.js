@@ -24,7 +24,7 @@ class UserCollection {
   }
   async read(userInfo) {
     if (userInfo !== undefined) {
-      console.log(userInfo.username, userInfo, 'user');
+      console.log(userInfo.email, userInfo, 'user');
       let record = await await this.schema.findOne({
         email: userInfo.email,
       });
@@ -46,7 +46,7 @@ class UserCollection {
           return 'Not The same pass';
         }
       } else {
-        return 'this username has not sign up';
+        return { status: 501, message: 'this username has not sign up' };
       }
     } else {
       let record = await this.schema.find({});
