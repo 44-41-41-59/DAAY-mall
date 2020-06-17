@@ -1,6 +1,8 @@
 'use strict';
 const userCollection = require('../../../DB/users/user-model.js');
 const fetch = require('node-fetch');
+const user = require('../../../DB/users/user-schema.js');
+
 
 async function signup(req, res, next) {
   let record;
@@ -33,8 +35,7 @@ async function signin(req, res, next) {
 async function facebookLogin(req, res) {
   const { accessToken, userID } = req.body;
   const response = await fetch(
-    `https://graph.facebook.com/v7.0/10216983614326453/?access_token=${accessToken}&fields=id%2Cname%2Cemail%2Cpicture&method=get&pretty=0&sdk=joey&suppress_http_code=1`
-  );
+    `https://graph.facebook.com/v7.0/10216983614326453/?access_token=${accessToken}&fields=id%2Cname%2Cemail%2Cpicture&method=get&pretty=0&sdk=joey&suppress_http_code=1`);
   const json = await response.json();
   if (json.id === userID) {
     //valid user

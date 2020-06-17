@@ -1,4 +1,3 @@
-/* eslint-disable comma-dangle */
 const schema = require('./user-schema.js');
 
 class UserCollection {
@@ -16,15 +15,15 @@ class UserCollection {
           .then((data) => {
             return res(data);
           })
-          .catch((e) => rej(new Error('user is here')));
+          .catch((e) => rej(new Error({status:500, message:'Cannot save user correctly!'})));
       } catch (e) {
-        rej(new Error('user is here'));
+        rej(new Error({status:500, message:'Error in creating a new user.'}));
       }
     });
   }
   async read(userInfo) {
     if (userInfo !== undefined) {
-      console.log(userInfo.username, userInfo, 'user');
+      console.log(userInfo.email, userInfo, 'user');
       let record = await await this.schema.findOne({
         email: userInfo.email,
       });
@@ -32,21 +31,21 @@ class UserCollection {
       if (record) {
         let valid = await this.schema.authenticateUser(
           userInfo.password,
-          record.password
+          record.password,
         );
         if (valid) {
           let token = await this.schema.generateToken(record._id);
           let userWithNewToken = await this.schema.findOneAndUpdate(
             { _id: record._id },
             { token },
-            { new: true }
+            { new: true },
           );
           return userWithNewToken;
         } else {
           return 'Not The same pass';
         }
       } else {
-        return 'this username has not sign up';
+        return {status:401, message:'User is not found!'};
       }
     } else {
       let record = await this.schema.find({});
