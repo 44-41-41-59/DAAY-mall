@@ -1,8 +1,8 @@
 'use strict';
-const { Schema, Model } = require('mongoose');
+const { Schema, model } = require('mongoose');
 const review = require('../subdocuments/reviews.js');
 
-const User = new Schema({
+const user = Schema({
   username: { type: String, required: true },
   password: { type: String, required: true },
   email: { type: String, required: true },
@@ -14,12 +14,15 @@ const User = new Schema({
     enum: ['user', 'admin', 'owner'],
     toLowerCase: true,
   },
-});
+},{toObject:{virtuals:true}},{toJSON:{virtuals:true}});
 
-User.virtual('review', {
+user.virtual('review', {
   ref: 'review',
   localField: '_id',
   foreignField: 'userID',
 });
 
-module.exports = new Model('user', User);
+module.exports = model('users', user);
+
+
+
