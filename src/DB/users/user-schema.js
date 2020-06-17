@@ -9,40 +9,51 @@ const SECRET = process.env.SECRET || 'daaymall';
 let avatar =
   'https://i2.wp.com/www.cycat.io/wp-content/uploads/2018/10/Default-user-picture.jpg';
 
-const User = Schema({
-  username: { type: String, required: true },
-  password: { type: String, required: true },
-  email: { type: String, required: true },
-  avatar: { type: String, required: true, default: avatar },
-  creditNumber: { type: String, maxlength: 19, minlength: 10 },
-  role: {
-    type: String,
-    default: 'user',
-    enum: ['user', 'admin', 'owner'],
-    toLowerCase: true,
+const user = Schema(
+  {
+    username: { type: String, required: true },
+    password: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
+    avatar: { type: String, required: true, default: avatar },
+    creditNumber: { type: String, maxlength: 19, minlength: 10 },
+    role: {
+      type: String,
+      default: 'user',
+      enum: ['user', 'admin', 'owner'],
+      toLowerCase: true,
+    },
+    userSignInType: {
+      type: String,
+      default: 'auth',
+      enum: ['auth', 'facebook', 'google'],
+      toLowerCase: true,
+    },
+    facebookID: { type: String },
+    token: { type: String },
   },
-  token: { type: String },
-});
+  { toObject: { virtuals: true } },
+  { toJSON: { virtuals: true } }
+);
 
-User.virtual('review', {
+user.virtual('review', {
   ref: 'review',
   localField: '_id',
   foreignField: 'userID',
 });
 
-User.pre('save', async function (next) {
+user.pre('save', async function (next) {
   try {
     let hashedPassword = await bcrypt.hash(this.password, 6);
     this.password = hashedPassword;
     this.token = this.generateToken(this._id);
-    await this.populate('acl').execPopulate();
+    // await this.populate('acl').execPopulate();
     next();
   } catch (e) {
     console.log(e.message);
   }
 });
 
-User.statics.authenticateUser = async function (pass, hash) {
+user.statics.authenticateUser = async function (pass, hash) {
   let validPass;
   try {
     validPass = await bcrypt.compare(pass, hash);
@@ -52,12 +63,12 @@ User.statics.authenticateUser = async function (pass, hash) {
   return validPass;
 };
 
-User.statics.generateToken = function (id) {
+user.statics.generateToken = function (id) {
   const userToken = jwt.sign({ id: id }, SECRET, { expiresIn: '10d' });
   return userToken;
 };
 
-User.statics.authenticateToken = async function (token) {
+user.statics.authenticateToken = async function (token) {
   try {
     const tokenObject = await jwt.verify(token, SECRET);
     let user = await this.find({ _id: tokenObject.id });
@@ -79,4 +90,4 @@ User.statics.authenticateToken = async function (token) {
   }
 };
 
-module.exports = model('user', User);
+module.exports = model('user', user);

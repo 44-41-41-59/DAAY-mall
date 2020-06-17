@@ -7,6 +7,7 @@ class UserCollection {
   }
   async create(userInfo) {
     let that = this;
+    // let check = await this.read(userInfo);
     return new Promise(function (res, rej) {
       try {
         let user = new that.schema(userInfo);
@@ -25,7 +26,7 @@ class UserCollection {
     if (userInfo !== undefined) {
       console.log(userInfo.username, userInfo, 'user');
       let record = await await this.schema.findOne({
-        username: userInfo.username,
+        email: userInfo.email,
       });
 
       if (record) {

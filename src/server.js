@@ -6,12 +6,16 @@ const notFound = require('./middlewares/errors/not-found.js');
 const errorHandeler = require('./middlewares/errors/server-error.js');
 const auth = require('./routes/auth/routes/routes.js');
 
+// facebook route
+// const facebookRoute = require('./facebookServer/facebook-server.js');
 const app = express();
 
 app.use(express.json());
 app.use(morgan('dev'));
 app.use(express.static('./public'));
 app.use('/auth', auth);
+
+// app.use(facebookRoute);
 
 app.use('*', notFound);
 app.use(errorHandeler);
