@@ -10,6 +10,7 @@ const Product = new Schema({
   // reviews: [reviews],
   description: { type: String },
   category: { type: String },
+  storeID:{ type: String, required: true },
 });
 
 module.exports = model('product', Product);

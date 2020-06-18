@@ -7,11 +7,11 @@ class productModel {
     this.schema = schema;
   }
 
-  async read(id) {
-    if (id === undefined) {
+  async read(obj) {
+    if (obj === undefined) {
       return await this.schema.find({});
     }
-    return await this.schema.find({ _id: id });
+    return await this.schema.find(obj);
   }
 
   create(record) {

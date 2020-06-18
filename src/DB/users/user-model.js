@@ -1,13 +1,14 @@
-/* eslint-disable comma-dangle */
 const schema = require('./user-schema.js');
 
+// main user collection class
 class UserCollection {
   constructor() {
     this.schema = schema;
   }
+
+  // method to create new users
   async create(userInfo) {
     let that = this;
-    // let check = await this.read(userInfo);
     return new Promise(function (res, rej) {
       try {
         let user = new that.schema(userInfo);
@@ -17,20 +18,21 @@ class UserCollection {
           .then((data) => {
             console.log('from the res', data);
             return res(data.populate('acl').execPopulate());
-            // return res(data);
           })
           .catch((e) =>
             rej(
-              new Error({ status: 500, message: 'Cannot save user correctly!' })
-            )
+              new Error({ status: 500, message: 'Cannot save user correctly!' }),
+            ),
           );
       } catch (e) {
         rej(
-          new Error({ status: 500, message: 'Error in creating a new user.' })
+          new Error({ status: 500, message: 'Error in creating a new user.' }),
         );
       }
     });
   }
+
+  // method for getting form user collection in the schema
   async read(userInfo) {
     if (userInfo !== undefined) {
       console.log(userInfo.email, userInfo, 'user');
@@ -43,12 +45,11 @@ class UserCollection {
       if (record) {
         let valid = await this.schema.authenticateUser(
           userInfo.password,
-          record.password
+          record.password,
         );
         if (valid) {
           let token = await this.schema.generateToken(record._id);
-          let userWithNewToken = await this.schema
-            .findOneAndUpdate({ _id: record._id }, { token }, { new: true })
+          let userWithNewToken = await this.schema.findOneAndUpdate({ _id: record._id }, { token }, { new: true })
             .populate('acl');
           return userWithNewToken;
         } else {

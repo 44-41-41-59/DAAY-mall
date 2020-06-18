@@ -1,44 +1,22 @@
 'use strict';
 
 const express = require('express');
-const productsModel = require('../../DB/product/product-model');
-// const acl= require('../../middlewares/auth/authorize');
-// const bearer = require('../../middlewares/auth/bearer');
+const permissions= require('../../middlewares/auth/authorize');
+const bearer = require('../../middlewares/auth/bearer');
+const {addProductsHandler, getProducts, updateProducts, deleteProducts, getStoreProducts, getProductsById} = require('./products.js');
+
 const router = express.Router();
-
-router.post('/products',addProducts);
-router.put('/products/:id', updateProducts);
-router.delete('/products/:id', deleteProducts );
-
-function addProducts(req,res){
-  productsModel.create(req.body).then((data) => {
-    res.json(data);
-  })
-    .catch((err) => res.status(403).send(err.message));
-}
-
-async function updateProducts(req,res,next){
-  try {
-    let id = req.params.id;
-    // console.log(id, req.body);
-    const data = await productsModel.update(id,req.body);
-    res.json(data);
-  } catch (e) {
-    next(e.message);
-  }
-}
-
-async function deleteProducts(req,res,next){
-  try {
-    let id = req.params.id;
-    await productsModel.delete(id);
-    res.json('Product is Deleted');
-  } catch (e) {
-    next(e.message);
-  }
-}
-
-
-
+// get all products from all stores by USER
+router.route('/products').get(getProducts);
+// get one product from all stores by USER/OWNER
+router.route('/products/:id').get(getProductsById);
+// add products for each store by OWNER
+router.route('/products').post(bearer, permissions('create'), addProductsHandler);
+// update each product by id by OWNER
+router.route('/products/:id').put(bearer, permissions('update'), updateProducts);
+// delete each product by id by OWNER
+router.route('/products/:id').delete(bearer, permissions('delete'), deleteProducts);
+// get all products of a specific store
+router.route('/products/:store_id').get(getStoreProducts);
 
 module.exports = router;
