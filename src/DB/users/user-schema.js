@@ -5,7 +5,7 @@ const { Schema, model } = require('mongoose');
 const review = require('../subdocuments/reviews.js');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { token } = require('morgan');
+// const { token } = require('morgan');
 const SECRET = process.env.SECRET || 'daaymall';
 let avatar =
   'https://i2.wp.com/www.cycat.io/wp-content/uploads/2018/10/Default-user-picture.jpg';
@@ -66,11 +66,11 @@ user.pre('save', async function (next) {
   }
 });
 
-// user.post('save', async function (next) {
-//   console.log('post save');
-//   await this.populate('acl').execPopulate();
-//   // next();
-// });
+user.post('save', async function (next) {
+  console.log('post save');
+  await this.populate('acl').execPopulate();
+  // next();
+});
 
 user.statics.authenticateUser = async function (pass, hash) {
   let validPass;
@@ -90,7 +90,9 @@ user.statics.generateToken = function (id) {
 user.statics.authenticateToken = async function (token) {
   try {
     const tokenObject = await jwt.verify(token, SECRET);
+    console.log(tokenObject.id,'00000000000000');
     let user = await this.find({ _id: tokenObject.id });
+    console.log(user,'1111111111111111111');
     if (user[0].token !== token)
       return Promise.reject({ message: 'NOt the same token' });
     let newToken = this.generateToken(user[0]._id);

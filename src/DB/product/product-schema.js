@@ -7,7 +7,7 @@ const Product = new Schema({
   price: { type: String, required: true },
   images: { type: Array },
   amount: { type: Number },
-  reviews: [reviews],
+  // reviews: [reviews],
   description: { type: String },
   category: { type: String },
 });
