@@ -1,7 +1,5 @@
 'use strict';
 
-const jwt = require('jsonwebtoken');
-const SECRET ='secret';
 const productSchema=require('./product-schema');
 
 class productModel {
@@ -13,6 +11,7 @@ class productModel {
     if (id === undefined) {
       return await this.schema.find({});
     }
+    return await this.schema.find({ _id: id });
   }
 
   create(record) {
@@ -20,6 +19,13 @@ class productModel {
     return newRecord.save();
   }
 
+  update(_id, record) {
+    return this.schema.findByIdAndUpdate(_id, record, { new: true });
+  }
+
+  delete(_id) {
+    return this.schema.findByIdAndDelete(_id);
+  }
 }
 
 module.exports = new productModel(productSchema);

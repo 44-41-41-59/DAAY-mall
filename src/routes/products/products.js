@@ -17,8 +17,30 @@ async function getProducts(req, res, next) {
   };
   res.json(resulte);
 }
+async function updateProducts(req,res,next){
+  try {
+    let id = req.params.id;
+    // console.log(id, req.body);
+    const data = await productsModel.update(id,req.body);
+    res.json(data);
+  } catch (e) {
+    next(e.message);
+  }
+}
+
+async function deleteProducts(req,res,next){
+  try {
+    let id = req.params.id;
+    await productsModel.delete(id);
+    res.json('Product is Deleted');
+  } catch (e) {
+    next(e.message);
+  }
+}
 
 module.exports = {
   addProductsHandler,
   getProducts,
+  updateProducts,
+  deleteProducts,
 };
