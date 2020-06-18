@@ -5,6 +5,7 @@ const { Schema, model } = require('mongoose');
 const review = require('../subdocuments/reviews.js');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const { token } = require('morgan');
 const SECRET = process.env.SECRET || 'daaymall';
 let avatar =
   'https://i2.wp.com/www.cycat.io/wp-content/uploads/2018/10/Default-user-picture.jpg';
@@ -41,17 +42,35 @@ user.virtual('review', {
   foreignField: 'userID',
 });
 
+user.virtual('acl', {
+  ref: 'role',
+  localField: 'role',
+  foreignField: 'role',
+  justOne: true,
+});
+
+// user.pre('findOneAndUpdate', function (next) {
+//   this.populate('acl');
+// });
+
 user.pre('save', async function (next) {
   try {
     let hashedPassword = await bcrypt.hash(this.password, 6);
+    // console.log('hash', hashedPassword);
     this.password = hashedPassword;
     this.token = jwt.sign({ id: this._id }, SECRET, { expiresIn: '10d' });
-    // await this.populate('acl').execPopulate();
+    // console.log('token', this.token);
     next();
   } catch (e) {
     console.log(e.message);
   }
 });
+
+// user.post('save', async function (next) {
+//   console.log('post save');
+//   await this.populate('acl').execPopulate();
+//   // next();
+// });
 
 user.statics.authenticateUser = async function (pass, hash) {
   let validPass;
