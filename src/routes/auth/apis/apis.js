@@ -11,12 +11,13 @@ async function signup(req, res, next) {
     if (check.status === 401) {
       record = await userCollection.create(req.body);
       console.log(record, 'record');
-      res.json(record);
+      req.acl = {
+        acl: record.acl.capabilities,
+      };
+      res.json({data:record, acl: req.acl});
     } else {
       throw Error('user already signed up');
     }
-    // record = await userCollection.create(req.body);
-    // res.send(record);
   } catch (e) {
     console.log({ status: 500, message: e.message });
     next({ status: 500, message: e.message });
@@ -26,8 +27,11 @@ async function signup(req, res, next) {
 async function signin(req, res, next) {
   let record = await userCollection.read(req.body);
   if (typeof record !== 'string') {
+    req.acl = {
+      acl: record.acl.capabilities,
+    };
     res.cookie('token', record.token);
-    res.json(record);
+    res.json({data:record, acl: req.acl});
   } else {
     next(record);
   }
@@ -36,8 +40,7 @@ async function signin(req, res, next) {
 async function facebookLogin(req, res) {
   const { accessToken, userID } = req.body;
   const response = await fetch(
-    `https://graph.facebook.com/v7.0/10216983614326453/?access_token=${accessToken}&fields=id%2Cname%2Cemail%2Cpicture&method=get&pretty=0&sdk=joey&suppress_http_code=1`
-  );
+    `https://graph.facebook.com/v7.0/10216983614326453/?access_token=${accessToken}&fields=id%2Cname%2Cemail%2Cpicture&method=get&pretty=0&sdk=joey&suppress_http_code=1`);
   const json = await response.json();
   if (json.id === userID) {
     //valid user
