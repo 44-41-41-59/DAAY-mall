@@ -108,5 +108,8 @@ user.statics.authenticateToken = async function (token) {
     return Promise.reject({ message: e.message });
   }
 };
+user.statics.can = (permission, userRole) => {
+  return userRole.includes(permission);
+};
 
 module.exports = model('user', user);

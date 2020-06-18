@@ -14,7 +14,9 @@ async function signup(req, res, next) {
       req.acl = {
         acl: record.acl.capabilities,
       };
-      res.json({data:record, acl: req.acl});
+
+      res.json({ data: record, acl: req.acl });
+
     } else {
       throw Error('user already signed up');
     }
@@ -31,7 +33,9 @@ async function signin(req, res, next) {
       acl: record.acl.capabilities,
     };
     res.cookie('token', record.token);
-    res.json({data:record, acl: req.acl});
+
+    res.json({ data: record, acl: req.acl });
+
   } else {
     next(record);
   }

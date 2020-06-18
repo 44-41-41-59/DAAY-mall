@@ -8,6 +8,9 @@ const auth = require('./routes/auth/routes/routes.js');
 const admin = require('./routes/admins/routes/routes.js');
 const productsRoute = require('./routes/products/routes');
 // facebook route
+const product = require('./routes/proudct/router');
+
+// facebook rout
 // const facebookRoute = require('./facebookServer/facebook-server.js');
 const app = express();
 
@@ -17,6 +20,7 @@ app.use(express.static('./public'));
 app.use('/auth', auth);
 app.use('/admin', admin);
 app.use(productsRoute);
+app.use('/products', product);
 
 // app.use(facebookRoute);
 

@@ -1,8 +1,8 @@
 'use strict';
 const { Schema, model } = require('mongoose');
-// const reviews = require('../subdocuments/reviews.js');
-
-const Product = Schema({
+const reviews = require('../subdocuments/reviews.js');
+// console.log(reviews);
+const Product = new Schema({
   name: { type: String, required: true },
   price: { type: String, required: true },
   images: { type: Array },
