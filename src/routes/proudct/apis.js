@@ -2,7 +2,6 @@
 const product = require('../../DB/product/product-model.js');
 
 async function getProducts(req, res, next) {
-  //   await product.creat();
   let prducts = await product.read();
   let resulte = {
     count: prducts.length,
@@ -11,4 +10,13 @@ async function getProducts(req, res, next) {
   res.json(resulte);
 }
 
-module.exports = { getProducts };
+async function getProductsById(req, res, next) {
+  let prducts = await product.read(req.params.id);
+  let resulte = {
+    count: prducts.length,
+    resultes: prducts,
+  };
+  res.json(resulte);
+}
+
+module.exports = { getProducts, getProductsById };
