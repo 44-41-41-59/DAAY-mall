@@ -5,6 +5,7 @@ document
   .getElementById('loginbtn')
   .addEventListener('click', loginWithFacebook, false);
 
+// function triggered by the a tag in the index.html to fetch data from facebook sdk
 function loginWithFacebook() {
   FB.login(
     (response) => {
@@ -26,7 +27,7 @@ function loginWithFacebook() {
         console.log(res);
       });
     },
-    { scope: 'public_profile,email' }
+    { scope: 'public_profile,email' },
   ); //we can only add these scopes with no app review
   return false;
 }

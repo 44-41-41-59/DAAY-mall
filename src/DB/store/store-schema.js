@@ -1,9 +1,9 @@
-/* eslint-disable comma-dangle */
 'use strict';
 const mongoose = require('mongoose');
 const reviews = require('../subdocuments/reviews.js');
 // const product = require('../product/product-schema.js');
 
+// store schema for storing stores
 const store = new mongoose.Schema(
   {
     name: { type: String, required: true },
@@ -29,9 +29,10 @@ const store = new mongoose.Schema(
     contactNumber: { type: Number, required: true },
     ownerID: { type: String, required: true },
   },
-  { toJSON: {virtuals:true}, toObject: {virtuals:true} }
+  { toJSON: {virtuals:true}, toObject: {virtuals:true} },
 );
 
+// reviews virtuals to get reviews from review database
 store.virtual('review', {
   ref: 'review',
   localField: '_id',

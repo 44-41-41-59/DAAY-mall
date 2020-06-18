@@ -1,4 +1,3 @@
-/* eslint-disable comma-dangle */
 'use strict';
 require('dotenv').config();
 const { Schema, model } = require('mongoose');
@@ -7,9 +6,12 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 // const { token } = require('morgan');
 const SECRET = process.env.SECRET || 'daaymall';
-let avatar =
-  'https://i2.wp.com/www.cycat.io/wp-content/uploads/2018/10/Default-user-picture.jpg';
 
+// default image for users
+let avatar ='https://i2.wp.com/www.cycat.io/wp-content/uploads/2018/10/Default-user-picture.jpg';
+
+
+// users schema
 const user = Schema(
   {
     username: { type: String, required: true },
@@ -33,15 +35,17 @@ const user = Schema(
     token: { type: String },
   },
   { toObject: { virtuals: true } },
-  { toJSON: { virtuals: true } }
+  { toJSON: { virtuals: true } },
 );
 
+// reviews virtuals  
 user.virtual('review', {
   ref: 'review',
   localField: '_id',
   foreignField: 'userID',
 });
 
+// roles virtuals  
 user.virtual('acl', {
   ref: 'role',
   localField: 'role',
@@ -53,25 +57,26 @@ user.virtual('acl', {
 //   this.populate('acl');
 // });
 
+// pre save hook for hashing the password before saving in database
 user.pre('save', async function (next) {
   try {
     let hashedPassword = await bcrypt.hash(this.password, 6);
-    // console.log('hash', hashedPassword);
     this.password = hashedPassword;
     this.token = jwt.sign({ id: this._id }, SECRET, { expiresIn: '10d' });
-    // console.log('token', this.token);
     next();
   } catch (e) {
     console.log(e.message);
   }
 });
 
+// post save hook for populating with capabilities
 user.post('save', async function (next) {
   console.log('post save');
   await this.populate('acl').execPopulate();
   // next();
 });
 
+// static method for user schema to authenticate the users
 user.statics.authenticateUser = async function (pass, hash) {
   let validPass;
   try {
@@ -82,11 +87,13 @@ user.statics.authenticateUser = async function (pass, hash) {
   return validPass;
 };
 
+// static method for user schema to generate token
 user.statics.generateToken = function (id) {
   const userToken = jwt.sign({ id: id }, SECRET, { expiresIn: '10d' });
   return userToken;
 };
 
+// static method for user schema to authenticate token
 user.statics.authenticateToken = async function (token) {
   try {
     const tokenObject = await jwt.verify(token, SECRET);
@@ -97,7 +104,7 @@ user.statics.authenticateToken = async function (token) {
     let newUser = await this.findOneAndUpdate(
       { _id: user[0]._id },
       { token: newToken },
-      { new: true }
+      { new: true },
     ).populate('acl').exec();
 
     if (user[0]) {
