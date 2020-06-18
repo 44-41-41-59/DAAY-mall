@@ -11,12 +11,13 @@ async function signup(req, res, next) {
     if (check.status === 401) {
       record = await userCollection.create(req.body);
       console.log(record, 'record');
-      res.send(record);
+      req.acl = {
+        acl: record.acl.capabilities,
+      };
+      res.json({ data: record, acl: req.acl });
     } else {
       throw Error('user already signed up');
     }
-    // record = await userCollection.create(req.body);
-    // res.send(record);
   } catch (e) {
     console.log({ status: 500, message: e.message });
     next({ status: 500, message: e.message });
@@ -26,8 +27,11 @@ async function signup(req, res, next) {
 async function signin(req, res, next) {
   let record = await userCollection.read(req.body);
   if (typeof record !== 'string') {
+    req.acl = {
+      acl: record.acl.capabilities,
+    };
     res.cookie('token', record.token);
-    res.json(record);
+    res.json({ data: record, acl: req.acl });
   } else {
     next(record);
   }
