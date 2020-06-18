@@ -28,7 +28,7 @@ const Store = Schema(
     contactNumber: { type: Number, required: true },
     ownerID: { type: String, required: true },
   },
-  { toJSON: true, toObject: true }
+  { toJSON: {virtual:true}, toObject: {virtual:true} }
 );
 
 Store.virtual('review', {
