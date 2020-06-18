@@ -1,21 +1,24 @@
 'use strict';
 const userCollection = require('../../../DB/users/user-model.js');
 const fetch = require('node-fetch');
+const user = require('../../../DB/users/user-schema.js');
 
 async function signup(req, res, next) {
   let record;
   try {
     let check = await userCollection.read(req.body);
-    if (check === 'this username has not sign up') {
+    console.log(check, 'check');
+    if (check.status === 401) {
       record = await userCollection.create(req.body);
-      res.send(record);
+      console.log(record, 'record');
+      res.json(record);
     } else {
       throw Error('user already signed up');
     }
     // record = await userCollection.create(req.body);
     // res.send(record);
   } catch (e) {
-    console.log(e.message);
+    console.log({ status: 500, message: e.message });
     next({ status: 500, message: e.message });
   }
 }

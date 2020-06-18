@@ -18,6 +18,15 @@ const Store = Schema(
     opening: { type: String },
     images: { type: Array },
     products: [product],
+    status: {
+      type: String,
+      default: 'pending',
+      enum: ['pending', 'rejected', 'approved'],
+    },
+    country: { type: String, toLowerCase: true, required: true },
+    city: { type: String, toLowerCase: true, required: true },
+    contactNumber: { type: Number, required: true },
+    ownerID: { type: String, required: true },
   },
   { toJSON: true, toObject: true }
 );
