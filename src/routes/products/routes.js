@@ -1,18 +1,22 @@
 'use strict';
 
 const express = require('express');
-const productsModel = require('../../DB/product/product-model');
-// const acl= require('../../middlewares/auth/authorize');
-// const bearer = require('../../middlewares/auth/bearer');
+const permissions= require('../../middlewares/auth/authorize');
+const bearer = require('../../middlewares/auth/bearer');
+const {addProductsHandler, getProducts, updateProducts, deleteProducts, getStoreProducts, getProductsById} = require('./products.js');
+
 const router = express.Router();
-
-router.post('/products',addProductsHandler);
-
-function addProductsHandler(req,res){
-  productsModel.create(req.body).then((data) => {
-    res.json(data);
-  })
-    .catch((err) => res.status(403).send(err.message));
-}
+// get all products from all stores by USER
+router.route('/products').get(getProducts);
+// get one product from all stores by USER/OWNER
+router.route('/products/:id').get(getProductsById);
+// add products for each store by OWNER
+router.route('/products').post(bearer, permissions('create'), addProductsHandler);
+// update each product by id by OWNER
+router.route('/products/:id').put(bearer, permissions('update'), updateProducts);
+// delete each product by id by OWNER
+router.route('/products/:id').delete(bearer, permissions('delete'), deleteProducts);
+// get all products of a specific store
+router.route('/products/:store_id').get(getStoreProducts);
 
 module.exports = router;

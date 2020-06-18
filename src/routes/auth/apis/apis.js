@@ -3,6 +3,7 @@ const userCollection = require('../../../DB/users/user-model.js');
 const fetch = require('node-fetch');
 const user = require('../../../DB/users/user-schema.js');
 
+// sign up function
 async function signup(req, res, next) {
   let record;
   try {
@@ -26,6 +27,7 @@ async function signup(req, res, next) {
   }
 }
 
+// sign in function
 async function signin(req, res, next) {
   let record = await userCollection.read(req.body);
   if (typeof record !== 'string') {
@@ -41,6 +43,7 @@ async function signin(req, res, next) {
   }
 }
 
+// facebook login function 
 async function facebookLogin(req, res) {
   const { accessToken, userID } = req.body;
   const response = await fetch(

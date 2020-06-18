@@ -8,7 +8,7 @@ router.route('/post/roles').post(async (req, res, next) => {
     let roles = {
       user: ['createReview', 'createCart'],
       owner: ['read', 'create', 'delete', 'updata'],
-      admin: ['read', 'create', 'update', 'delete'],
+      admin: ['read', 'create', 'update', 'delete', 'updateStoreStatus'],
     };
     for (let key in roles) {
       let record = new Roles({ role: key, capabilities: roles[key] });
