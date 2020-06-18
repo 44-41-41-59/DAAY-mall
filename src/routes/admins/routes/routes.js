@@ -11,7 +11,7 @@ router.route('/post/roles').post(async (req, res, next) => {
       admin: ['read', 'create', 'update', 'delete'],
     };
     for (let key in roles) {
-      let record = new Roles({ role: key, permissions: roles[key] });
+      let record = new Roles({ role: key, capabilities: roles[key] });
       record = await record.save();
     }
     res.send('all roles did add successfully');

@@ -11,7 +11,7 @@ async function signup(req, res, next) {
     if (check.status === 401) {
       record = await userCollection.create(req.body);
       console.log(record, 'record');
-      res.json(record);
+      res.send(record);
     } else {
       throw Error('user already signed up');
     }
