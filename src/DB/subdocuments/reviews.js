@@ -8,4 +8,5 @@ const Review = new Schema({
   storeID: { type: String, required: true },
 });
 
-module.exports = model('review', Review);
+// module.exports = model('review', Review);
+module.exports = Review;

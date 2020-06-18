@@ -10,4 +10,19 @@ class ProductCollection {
       return await this.schema.find({});
     }
   }
+
+  // async creat() {
+  //   let obj = {
+  //     name: 'jflkdsj',
+  //     price: '5',
+  //     amount: 6,
+  //     description: 'hello my finds',
+  //     category: 'bombom',
+  //   };
+  //   let tet = new this.schema(obj);
+  //   tet.save();
+  //   return tet;
+  // }
 }
+
+module.exports = new ProductCollection();
