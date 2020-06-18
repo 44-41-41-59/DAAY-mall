@@ -47,8 +47,7 @@ class UserCollection {
         );
         if (valid) {
           let token = await this.schema.generateToken(record._id);
-          let userWithNewToken = await this.schema
-            .findOneAndUpdate({ _id: record._id }, { token }, { new: true })
+          let userWithNewToken = await this.schema.findOneAndUpdate({ _id: record._id }, { token }, { new: true })
             .populate('acl');
           return userWithNewToken;
         } else {

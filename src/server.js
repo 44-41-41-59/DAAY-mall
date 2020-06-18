@@ -9,7 +9,6 @@ const admin = require('./routes/admins/routes/routes.js');
 const productsRoute = require('./routes/products/routes');
 // facebook route
 const storeRoutes = require('./routes/store/routes.js');
-const product = require('./routes/proudct/router');
 
 // facebook rout
 // const facebookRoute = require('./facebookServer/facebook-server.js');
@@ -22,7 +21,6 @@ app.use('/auth', auth);
 app.use('/admin', admin);
 app.use(productsRoute);
 app.use(storeRoutes);
-app.use('/products', product);
 
 // app.use(facebookRoute);
 

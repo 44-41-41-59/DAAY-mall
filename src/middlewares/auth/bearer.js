@@ -8,7 +8,13 @@ module.exports = async (req, res, next) => {
       const [auth, token] = req.headers.authorization.split(' ');
       if (auth === 'Bearer') {
         let record = await user.authenticateToken(token);
-        req.user = record;
+        // console.log('record in bearer', record.populate('acl').exec(), 'request', req.body);
+        req.user = {
+          username: record.username,
+          acl: record.acl,
+          capabilities: record.acl.capabilities,
+        };
+
       } else {
         next({ status: 401, message: 'Invalid auth header' });
       }

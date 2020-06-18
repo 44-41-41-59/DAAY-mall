@@ -1,18 +1,12 @@
 'use strict';
 
 const express = require('express');
-const productsModel = require('../../DB/product/product-model');
-// const acl= require('../../middlewares/auth/authorize');
-// const bearer = require('../../middlewares/auth/bearer');
+const permissions= require('../../middlewares/auth/authorize');
+const bearer = require('../../middlewares/auth/bearer');
+const {addProductsHandler, getProducts} = require('./products.js');
 const router = express.Router();
 
-router.post('/products',addProductsHandler);
-
-function addProductsHandler(req,res){
-  productsModel.create(req.body).then((data) => {
-    res.json(data);
-  })
-    .catch((err) => res.status(403).send(err.message));
-}
+router.route('/products').post(bearer, permissions('create'), addProductsHandler);
+router.route('/products').get(getProducts);
 
 module.exports = router;

@@ -90,21 +90,20 @@ user.statics.generateToken = function (id) {
 user.statics.authenticateToken = async function (token) {
   try {
     const tokenObject = await jwt.verify(token, SECRET);
-    console.log(tokenObject.id,'00000000000000');
     let user = await this.find({ _id: tokenObject.id });
-    console.log(user,'1111111111111111111');
     if (user[0].token !== token)
-      return Promise.reject({ message: 'NOt the same token' });
+      return Promise.reject({ message: 'Create another token!!' });
     let newToken = this.generateToken(user[0]._id);
     let newUser = await this.findOneAndUpdate(
       { _id: user[0]._id },
       { token: newToken },
       { new: true }
-    );
+    ).populate('acl').exec();
+
     if (user[0]) {
       return Promise.resolve(newUser);
     } else {
-      return Promise.reject({ message: 'User is not found!' });
+      return Promise.reject({ message: 'User not found!' });
     }
   } catch (e) {
     return Promise.reject({ message: e.message });
