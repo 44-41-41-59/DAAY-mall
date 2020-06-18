@@ -11,6 +11,7 @@ class productModel {
     if (id === undefined) {
       return await this.schema.find({});
     }
+    return await this.schema.find({ _id: id });
   }
 
   create(record) {
@@ -25,7 +26,6 @@ class productModel {
   delete(_id) {
     return this.schema.findByIdAndDelete(_id);
   }
-
 }
 
 module.exports = new productModel(productSchema);
