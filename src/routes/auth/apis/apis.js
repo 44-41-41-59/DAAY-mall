@@ -14,7 +14,9 @@ async function signup(req, res, next) {
       req.acl = {
         acl: record.acl.capabilities,
       };
+
       res.json({ data: record, acl: req.acl });
+
     } else {
       throw Error('user already signed up');
     }
@@ -31,7 +33,9 @@ async function signin(req, res, next) {
       acl: record.acl.capabilities,
     };
     res.cookie('token', record.token);
+
     res.json({ data: record, acl: req.acl });
+
   } else {
     next(record);
   }
@@ -40,8 +44,7 @@ async function signin(req, res, next) {
 async function facebookLogin(req, res) {
   const { accessToken, userID } = req.body;
   const response = await fetch(
-    `https://graph.facebook.com/v7.0/10216983614326453/?access_token=${accessToken}&fields=id%2Cname%2Cemail%2Cpicture&method=get&pretty=0&sdk=joey&suppress_http_code=1`
-  );
+    `https://graph.facebook.com/v7.0/10216983614326453/?access_token=${accessToken}&fields=id%2Cname%2Cemail%2Cpicture&method=get&pretty=0&sdk=joey&suppress_http_code=1`);
   const json = await response.json();
   if (json.id === userID) {
     //valid user
