@@ -6,6 +6,7 @@ const notFound = require('./middlewares/errors/not-found.js');
 const errorHandeler = require('./middlewares/errors/server-error.js');
 const auth = require('./routes/auth/routes/routes.js');
 const admin = require('./routes/admins/routes/routes.js');
+const storeRoutes = require('./routes/store/routes.js');
 const product = require('./routes/proudct/router');
 
 // facebook rout
@@ -17,6 +18,7 @@ app.use(morgan('dev'));
 app.use(express.static('./public'));
 app.use('/auth', auth);
 app.use('/admin', admin);
+app.use(storeRoutes);
 app.use('/products', product);
 
 // app.use(facebookRoute);
