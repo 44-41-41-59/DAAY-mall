@@ -7,6 +7,7 @@ const errorHandeler = require('./middlewares/errors/server-error.js');
 const auth = require('./routes/auth/routes/routes.js');
 const admin = require('./routes/admins/routes/routes.js');
 const productsRoute = require('./routes/products/routes');
+const reviewsRoute = require('./routes/reviews/router');
 // facebook route
 const storeRoutes = require('./routes/store/routes.js');
 const product = require('./routes/proudct/router');
@@ -21,8 +22,10 @@ app.use(express.static('./public'));
 app.use('/auth', auth);
 app.use('/admin', admin);
 app.use(productsRoute);
+app.use(reviewsRoute);
 app.use(storeRoutes);
 app.use('/products', product);
+
 
 // app.use(facebookRoute);
 
