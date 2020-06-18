@@ -7,6 +7,7 @@ const errorHandeler = require('./middlewares/errors/server-error.js');
 const auth = require('./routes/auth/routes/routes.js');
 const seedRoles = require('./routes/seedRoles/routes/routes.js');
 const productsRoute = require('./routes/products/routes');
+const reviewsRoute = require('./routes/reviews/router');
 const storeRoutes = require('./routes/store/routes.js');
 
 const app = express();
@@ -21,6 +22,8 @@ app.use('/auth', auth);
 app.use('/seedroles', seedRoles);
 // products routes
 app.use(productsRoute);
+// reviews routes
+app.use(reviewsRoute);
 // stores routes
 app.use(storeRoutes);
 
