@@ -1,10 +1,10 @@
 /* eslint-disable comma-dangle */
 'use strict';
-const { Schema, model } = require('mongoose');
+const mongoose = require('mongoose');
 const reviews = require('../subdocuments/reviews.js');
-const product = require('../product/product-schema.js');
+// const product = require('../product/product-schema.js');
 
-const Store = Schema(
+const store = new mongoose.Schema(
   {
     name: { type: String, required: true },
     logo: { type: String },
@@ -17,7 +17,8 @@ const Store = Schema(
     closing: { type: String },
     opening: { type: String },
     images: { type: Array },
-    products: [product],
+    products: {type: Array},
+    // products: [product],
     status: {
       type: String,
       default: 'pending',
@@ -28,13 +29,13 @@ const Store = Schema(
     contactNumber: { type: Number, required: true },
     ownerID: { type: String, required: true },
   },
-  { toJSON: true, toObject: true }
+  { toJSON: {virtuals:true}, toObject: {virtuals:true} }
 );
 
-Store.virtual('review', {
+store.virtual('review', {
   ref: 'review',
   localField: '_id',
   foreignField: 'storeID',
 });
 
-module.exports = model('store', Store);
+module.exports = mongoose.model('store', store);
