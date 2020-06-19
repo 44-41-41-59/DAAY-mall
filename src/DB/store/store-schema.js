@@ -17,7 +17,7 @@ const store = new mongoose.Schema(
     closing: { type: String },
     opening: { type: String },
     images: { type: Array },
-    products: {type: Array},
+    // products: {type: Array},
     // products: [product],
     status: {
       type: String,
@@ -32,9 +32,16 @@ const store = new mongoose.Schema(
   { toJSON: {virtuals:true}, toObject: {virtuals:true} },
 );
 
-// reviews virtuals to get reviews from review database
+// reviews virtuals to get reviews from reviews collection
 store.virtual('review', {
   ref: 'review',
+  localField: '_id',
+  foreignField: 'storeID',
+});
+
+// products virtuals to get products from products collection
+store.virtual('products', {
+  ref: 'product',
   localField: '_id',
   foreignField: 'storeID',
 });

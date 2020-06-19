@@ -23,7 +23,7 @@ app.use('/seedroles', seedRoles);
 // products routes
 app.use(productsRoute);
 // reviews routes
-app.use(reviewsRoute);
+// app.use(reviewsRoute);
 // stores routes
 app.use(storeRoutes);
 
