@@ -1,25 +1,23 @@
 # DAAY-mall
 
----------------------------------
+---
 
 ## We are deployed on heroku
 
 [DAAY-mall website](https://daay-mall.herokuapp.com/)
 
----------------------------------
+---
 
 ## Web Application
 
- online platform for stores  where  there are three types of users :
+online platform for stores where there are three types of users :
 
- An admin to verify users
- A user (store owner) can register their stores (if verified, normal users can buy from them)   
+An admin to verify users
+A user (store owner) can register their stores (if verified, normal users can buy from them)  
  Normal users that can shop from different stores
-          
 
 What problem or pain point does it solve? a. Keep it high level without going into too much detail. (3-4 sentences is enough)
- We offer store owners a platform to display their products  that makes the shopping experience  easier 
- 
+We offer store owners a platform to display their products that makes the shopping experience easier
 
 Minimum MVP definition.
 What is the minimum required for you to present on your demo day?
@@ -44,7 +42,7 @@ o Add/update products to the store
 o Chat with customers
 o Delete stores
 
----------------------------------
+---
 
 ## Tools Used
 
@@ -54,7 +52,7 @@ Microsoft Visual Studio
 - Express
 - Socket.io
 
----------------------------------
+---
 
 ## Getting Started
 
@@ -77,16 +75,16 @@ Install all dependencies needed for the project.
 Database
 ```
 
-* explain how to use the database *
+- explain how to use the database \*
 
 ```
 cd YourRepo/YourProject
 npm start
 ```
 
----------------------------------
+---
 
-## Usage
+<!-- ## Usage
 
 ***[Provide some images of your app that shows how it can be used with brief description as title]***
 
@@ -113,16 +111,20 @@ npm start
 ***[Add a clean and clear explanation of what the data flow is. Walk me through it.]***
 ![Data Flow Diagram](/assets/img/Flowchart.png)
 
----------------------------
+--------------------------- -->
+
+## Auth/ask for store (UML)
+
+![auth](assets/umlauth.png)
 
 ## Data Model
 
 ### Overall Project Schema
 
-***[Add a description of your DB schema. Explain the relationships to me.]***
+**_[Add a description of your DB schema. Explain the relationships to me.]_**
 ![Database Schema](/assets/img/ERD.png)
 
----------------------------
+---
 
 ## Authors
 
@@ -131,5 +133,4 @@ Diana Al azzam
 Ahmed Abu samaan
 Anolla Haddad
 
-
-------------------------------
+---
