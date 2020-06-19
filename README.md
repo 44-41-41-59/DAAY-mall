@@ -115,7 +115,7 @@ npm start
 
 ## Auth/ask for store (UML)
 
-![auth](assets/umlauth.png)
+![auth](/assets/umlauth.PNG)
 
 ## Data Model
 
