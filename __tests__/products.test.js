@@ -4,7 +4,7 @@ require('@code-fellows/supergoose');
 
 const productsModel = require('../src/DB/product/product-model');
 
-const obj = { name: 'creams', price:'#' };
+const obj = { name: 'creams', price:'#', storeID: '1b2c' };
 const editedObj =  { name: 'creams', price:'*' };
 
 describe('products Model', () => {

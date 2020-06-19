@@ -4,7 +4,6 @@ const storeModel = require('../../DB/store/store.model.js');
 // get all stores in the website
 function getAllStores(req, res, next){
   storeModel.read().then((data)=> {
-    console.log('helllllllllllllllllllo', data);
     res.json({count: data.length, results:data, products:data.products});
   })
     .catch(next);     

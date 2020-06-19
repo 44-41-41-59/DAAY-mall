@@ -1,6 +1,6 @@
 'use strict';
 const mongoose = require('mongoose');
-const reviews = require('../subdocuments/reviews.js');
+// const reviews = require('../subdocuments/reviews.js');
 // const product = require('../product/product-schema.js');
 
 // store schema for storing stores
@@ -33,8 +33,8 @@ const store = new mongoose.Schema(
 );
 
 // reviews virtuals to get reviews from reviews collection
-store.virtual('review', {
-  ref: 'review',
+store.virtual('reviews', {
+  ref: 'reviews',
   localField: '_id',
   foreignField: 'storeID',
 });
