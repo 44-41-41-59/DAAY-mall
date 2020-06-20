@@ -15,9 +15,7 @@ class reviewModel {
   }
 
   create(record) {
-    console.log('uuuuuuuuuuuuuuuuuuuuuuu', record);
     let newRecord = new this.schema(record);
-    console.log('nnnnnnnnnnnnnnnnnnnnnnn', record);
     return newRecord.save();
   }
 

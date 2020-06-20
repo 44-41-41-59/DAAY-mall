@@ -27,7 +27,7 @@ const store = new mongoose.Schema(
     contactNumber: { type: Number, required: true },
     ownerID: { type: String, required: true },
   },
-  { toJSON: { virtuals: true }, toObject: { virtuals: true } }
+  { toJSON: { virtuals: true }, toObject: { virtuals: true } },
 );
 
 // reviews virtuals to get reviews from reviews collection
