@@ -1,7 +1,7 @@
 'use strict';
 require('dotenv').config();
 const { Schema, model } = require('mongoose');
-const review = require('../subdocuments/reviews.js');
+// const review = require('../subdocuments/reviews.js');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 // const { token } = require('morgan');

@@ -1,7 +1,7 @@
 'use strict';
-const { Schema } = require('mongoose');
+const { Schema, model } = require('mongoose');
 
-const Review = new Schema({
+const review = new Schema({
   userID: { type: String, required: true },
   review: { type: String, required: true },
   rate: { type: Number, required: true, min: 0, max: 5 },
@@ -9,4 +9,5 @@ const Review = new Schema({
   productID: { type: String },
 });
 
-module.exports = Review;
+
+module.exports = model('review', review);
