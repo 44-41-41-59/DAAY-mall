@@ -9,9 +9,9 @@ const seedRoles = require('./routes/seedRoles/routes/routes.js');
 const productsRoute = require('./routes/products/routes');
 const reviewsRoute = require('./routes/reviews/router.js');
 const storeRoutes = require('./routes/store/routes.js');
+const whishlistRoutes=require('./routes/whishlist/routes.js');
 const pay = require('./routes/payment/routes.js');
 const orderRoutes = require('./routes/store/orders/routes.js');
-
 
 const app = express();
 
@@ -30,6 +30,8 @@ app.use(productsRoute);
 app.use(reviewsRoute);
 // stores routes
 app.use(storeRoutes);
+// whishlist routes
+app.use(whishlistRoutes);
 app.use(pay);
 // orders routes
 app.use(orderRoutes);
