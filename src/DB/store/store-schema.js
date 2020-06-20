@@ -1,7 +1,5 @@
 'use strict';
 const mongoose = require('mongoose');
-// const reviews = require('../subdocuments/reviews.js');
-// const product = require('../product/product-schema.js');
 
 // store schema for storing stores
 const store = new mongoose.Schema(
@@ -29,7 +27,7 @@ const store = new mongoose.Schema(
     contactNumber: { type: Number, required: true },
     ownerID: { type: String, required: true },
   },
-  { toJSON: {virtuals:true}, toObject: {virtuals:true} },
+  { toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
 
 // reviews virtuals to get reviews from reviews collection
@@ -42,6 +40,12 @@ store.virtual('reviews', {
 // products virtuals to get products from products collection
 store.virtual('products', {
   ref: 'product',
+  localField: '_id',
+  foreignField: 'storeID',
+});
+
+store.virtual('order', {
+  ref: 'order',
   localField: '_id',
   foreignField: 'storeID',
 });
