@@ -1,15 +1,20 @@
+/* eslint-disable comma-dangle */
 'use strict';
 require('dotenv').config();
 const { Schema, model } = require('mongoose');
 const review = require('../subdocuments/reviews.js');
+const favorite = require('../subdocuments/favorite-schema.js');
+const viwedProduct = require('../subdocuments/viwed-schema.js');
+const cart = require('../subdocuments/cart-schema.js');
+const wishlist = require('../subdocuments/wishlist-schema.js');
+const paymentsHistory = require('../subdocuments/payments-history-schema.js');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-// const { token } = require('morgan');
 const SECRET = process.env.SECRET || 'daaymall';
 
 // default image for users
-let avatar ='https://i2.wp.com/www.cycat.io/wp-content/uploads/2018/10/Default-user-picture.jpg';
-
+let avatar =
+  'https://i2.wp.com/www.cycat.io/wp-content/uploads/2018/10/Default-user-picture.jpg';
 
 // users schema
 const user = Schema(
@@ -33,29 +38,30 @@ const user = Schema(
     },
     facebookID: { type: String },
     token: { type: String },
+    favoriteStores: [{ type: Schema.Types.ObjectId, ref: 'favoriteStore' }],
+    viwedProducts: [{ type: Schema.Types.ObjectId, ref: 'viwedProduct' }],
+    cart: [{ type: Schema.Types.ObjectId, ref: 'cart' }],
+    wishlist: [{ type: Schema.Types.ObjectId, ref: 'wishlist' }],
+    paymentsHistory: [{ type: Schema.Types.ObjectId, ref: 'paymintsHistory' }],
   },
   { toObject: { virtuals: true } },
-  { toJSON: { virtuals: true } },
+  { toJSON: { virtuals: true } }
 );
 
-// reviews virtuals  
+// reviews virtuals
 user.virtual('review', {
   ref: 'review',
   localField: '_id',
   foreignField: 'userID',
 });
 
-// roles virtuals  
+// roles virtuals
 user.virtual('acl', {
   ref: 'role',
   localField: 'role',
   foreignField: 'role',
   justOne: true,
 });
-
-// user.pre('findOneAndUpdate', function (next) {
-//   this.populate('acl');
-// });
 
 // pre save hook for hashing the password before saving in database
 user.pre('save', async function (next) {
@@ -104,8 +110,10 @@ user.statics.authenticateToken = async function (token) {
     let newUser = await this.findOneAndUpdate(
       { _id: user[0]._id },
       { token: newToken },
-      { new: true },
-    ).populate('acl').exec();
+      { new: true }
+    )
+      .populate('acl')
+      .exec();
 
     if (user[0]) {
       return Promise.resolve(newUser);
