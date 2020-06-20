@@ -10,7 +10,7 @@ class Model {
   }
   read(_id) {
     const queryObject = _id ? { _id } : {};
-    return this.schema.find(queryObject).populate('products');
+    return this.schema.find(queryObject).populate('products').populate('reviews').populate('orders');
   }
   /** Method to create a new record and save it to the db */
   create(record) {
