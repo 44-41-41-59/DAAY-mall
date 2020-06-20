@@ -22,7 +22,6 @@
   },
   "homepage": "https://github.com/44-41-41-59/DAAY-mall#readme",
   "dependencies": {
-    "@code-fellows/supergoose": "^1.0.2",
     "base-64": "^0.1.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
@@ -35,6 +34,7 @@
     "superagent": "^5.2.2"
   },
   "devDependencies": {
+    "@code-fellows/supergoose": "^1.0.2",
     "eslint": "^7.2.0",
     "jest": "^26.0.1",
     "jsdoc": "^3.6.4"

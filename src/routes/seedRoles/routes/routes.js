@@ -14,7 +14,7 @@ router.route('/post/roles').post(async (req, res, next) => {
       let record = new Roles({ role: key, capabilities: roles[key] });
       record = await record.save();
     }
-    res.send('all roles did add successfully');
+    res.send('All roles has been added successfully');
   } catch (e) {
     next({ status: 500, message: e.message });
   }
