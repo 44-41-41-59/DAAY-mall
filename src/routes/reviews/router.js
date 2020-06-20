@@ -1,89 +1,14 @@
 'use strict';
 
 const express = require('express');
-const reviewsModel = require('../../DB/subdocuments/reviews.js');
 const router = express.Router();
-router.post('/reviews', addReviewsHandler);
-const reviewModel = require('../../DB/store/store.model.js');
+const {getReviews, getOneReview, addReview, editReview, deleteReview} = require('./reviews.js');
 
-function addReviewsHandler(req, res) {
-  reviewsModel.create(req.body).then((data) => {
-    res.json(data);
-  })
-    .catch((err) => res.status(403).send(err.message));
-}
-
-router.get('/:model',getAll);
-router.post('/:model',post);
-router.get('/:model/:id',getOne);
-router.put('/:model/:id',update);
-router.delete('/:model/:id',deleteHandler);
-
-function getAll(req,res,next){
-  console.log('GETALL');
-  req.model.get()
-    .then(results=>{
-      let count = results.length;
-      res.json({count,results});
-    }).catch(next);
-}
-
-function post(req,res,next){
-  req.model.create(req.body)
-    .then(results=>{
-      res.json(results);
-    }).catch(next);
-}
-
-function deleteHandler(req,res,next){
-  let id = req.params.id;
-  req.model.delete(id)
-    .then(record=>{
-      res.json(record);
-    }).catch(next);
-}
-function update(req,res,next){
-  let id = req.params.id;
-  req.model.update(id, req.body)
-    .then(record=>{
-      res.json(record);
-    }).catch(next);
-}
-
-function getOne(req,res,next){
-  let id = req.params.id;
-  req.model.get(id)
-    .then(record=>{
-      res.json(record);
-    }).catch(next);
-}
+//get all reviews for one product or store or if you dont put query you will get all the reviews for everything/ add one review to a product (you should pass the productID as a query)
+router.route('/review').get(getReviews).post(addReview);
+// get one review on a specific product or store / edit one review on a product or store/ delete one review on a product or a store
+router.route('/review/:id').get(getOneReview).put(editReview).delete(deleteReview);
 
 
-router.get('/reviews/read', (req, res, next) => {
-  reviewModel.read().then((data) => res.json({ count: data.length, results: data }))
-    .catch(next);
-});
-
-router.post('/reviews/comment', (req, res, next) => {
-  req.model.create(req.body)
-    .then(results => {
-      res.json(results);
-    }).catch(next);
-});
-
-router.put('/reviews/rate', (req, res ,next) => {
-  req.model.create(req.body)
-    .then(results => {
-      res.json(results);
-    }).catch(next);
-});
-
-router.delete('/reviews/remove', (req, res , next)  => {
-  let id = req.params.id;
-  req.model.delete(id)
-    .then(record=>{
-      res.json(record);
-    }).catch(next);
-});
 
 module.exports = router;
