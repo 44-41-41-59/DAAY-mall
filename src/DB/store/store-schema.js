@@ -32,7 +32,7 @@ const store = new mongoose.Schema(
 
 // reviews virtuals to get reviews from reviews collection
 store.virtual('reviews', {
-  ref: 'reviews',
+  ref: 'review',
   localField: '_id',
   foreignField: 'storeID',
 });
@@ -44,7 +44,8 @@ store.virtual('products', {
   foreignField: 'storeID',
 });
 
-store.virtual('order', {
+// orders virtuals to get orders from orders collection
+store.virtual('orders', {
   ref: 'order',
   localField: '_id',
   foreignField: 'storeID',
