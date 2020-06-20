@@ -6,4 +6,10 @@ const Cart = Schema({
   products: [{ type: Schema.Types.ObjectId, ref: 'product' }],
 });
 
+Cart.virtual('carts', {
+  ref: 'carts',
+  localField: '_id',
+  foreignField: 'productID',
+});
+
 module.exports = model('cart', Cart);

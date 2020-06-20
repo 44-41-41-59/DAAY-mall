@@ -2,9 +2,9 @@
 'use strict';
 require('dotenv').config();
 const { Schema, model } = require('mongoose');
-const favorite = require('../subdocuments/favorite-schema.js');
+// const favorite = require('../subdocuments/favorite-schema.js');
 const viwedProduct = require('../subdocuments/viwed-schema.js');
-const cart = require('../subdocuments/cart-schema.js');
+// const cart = require('../subdocuments/cart-schema.js');
 const wishlist = require('../subdocuments/wishlist-schema.js');
 const paymentsHistory = require('../subdocuments/payments-history-schema.js');
 const bcrypt = require('bcryptjs');
