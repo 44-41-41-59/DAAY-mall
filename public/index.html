@@ -2,38 +2,53 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
 </head>
 
 <body>
-    <h1>hello lovely people</h1>
-    <!-- Facebook tag -->
-    <a id="loginbtn" onclick="javascript:loginWithFacebook()">Login with facebook / Sign up</a>
- 
-    <!-- Facebook script 1 -->
-    <script>
-        window.fbAsyncInit = function () {
-            FB.init({
-                appId: '586293735622713',
-                cookie: true,
-                xfbml: true,
-                version: 'v7.0'
-            });
-            FB.AppEvents.logPageView();
-        };
-        (function (d, s, id) {
-            var js, fjs = d.getElementsByTagName(s)[0];
-            if (d.getElementById(id)) { return; }
-            js = d.createElement(s); js.id = id;
-            js.src = "https://connect.facebook.net/en_US/sdk.js";
-            fjs.parentNode.insertBefore(js, fjs);
-        }(document, 'script', 'facebook-jssdk'));
-    </script>
+  <h1>hello lovely people</h1>
+  <!-- Facebook tag -->
+  <a id="loginbtn" onclick="javascript:loginWithFacebook()">Login with facebook / Sign up</a>
 
-    <!-- Facebook script 2 -->
-    <script src="/facebookscript.js"></script>
+  <form action="/charge" method="POST">
+    <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+      data-key="pk_test_51Gw8N8FYKTuVXfMpXAMAQXwmy0u4EPjx6vOzczIXKepkn2ys7RjgF6ykhN7F6R9lChSV37GXTBDGk5kpFxyIQ5Va00BqjilQpa"
+      data-amount="2500" data-name="the product name" data-description="the product description"
+      data-image="https://previews.123rf.com/images/pshonka/pshonka1802/pshonka180200298/95091514-shopping-mall-cart-isolated-vector-icon-e-commerce-sign-graph-symbol-for-your-web-site-design-logo-a.jpg"
+      data-locale="auto">
+      </script>
+    <!-- <script>
+      // Hide default stripe button
+      document.getElementsByClassName('stripe-button-el')[0].style.display = 'none';
+    </script> -->
+    <!-- <button type="submit" class="btn btn-outline-dark text-white btn-lg">Purchase For $25</button> -->
+  </form>
+
+
+  <!-- Facebook script 1 -->
+  <script>
+    window.fbAsyncInit = function () {
+      FB.init({
+        appId: '586293735622713',
+        cookie: true,
+        xfbml: true,
+        version: 'v7.0'
+      });
+      FB.AppEvents.logPageView();
+    };
+    (function (d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) { return; }
+      js = d.createElement(s); js.id = id;
+      js.src = "https://connect.facebook.net/en_US/sdk.js";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+  </script>
+
+  <!-- Facebook script 2 -->
+  <script src="/facebookscript.js"></script>
 
 </body>
 
