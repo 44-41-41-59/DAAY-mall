@@ -7,10 +7,14 @@ const Product = new Schema({
   price: { type: String, required: true },
   images: { type: Array },
   amount: { type: Number },
-  // reviews: [reviews],
   description: { type: String },
   category: { type: String },
-  storeID:{ type: String, required: true },
+  storeID: { type: String, required: true },
+});
+Product.virtual('reviews', {
+  ref: 'review',
+  localField: '_id',
+  foreignField: 'productID',
 });
 
 module.exports = model('product', Product);
