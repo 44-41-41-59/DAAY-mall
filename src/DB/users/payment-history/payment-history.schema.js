@@ -1,6 +1,6 @@
 'use strict';
 const { Schema, model } = require('mongoose');
-const products = require('../product/product-schema.js');
+// const products = require('../product/product-schema.js');
 
 const paymentsHistory = Schema({
   userID: { type: Schema.Types.ObjectId },

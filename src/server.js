@@ -14,7 +14,7 @@ const cartRoutes = require('./routes/cart/routes.js');
 const whishlistRoutes=require('./routes/whishlist/routes.js');
 const pay = require('./routes/payment/routes.js');
 const orderRoutes = require('./routes/store/orders/routes.js');
-
+const paymentHistory = require('./routes/payment/payment-history/routes.js');
 
 const app = express();
 
@@ -42,6 +42,10 @@ app.use(whishlistRoutes);
 app.use(pay);
 // orders routes
 app.use(orderRoutes);
+// payment history routes
+app.use(paymentHistory);
+
+
 
 
 
