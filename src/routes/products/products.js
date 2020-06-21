@@ -1,6 +1,7 @@
 'use strict';
 
 const productsModel = require('../../DB/product/product-model');
+const viewedModel=require('../../DB/viewed/viewed-model');
 
 // add products for each store by OWNER
 function addProductsHandler(req,res){
@@ -29,7 +30,18 @@ async function getProductsById(req, res, next) {
     count: products.length,
     results: products,
   };
-  res.json(result);
+  console.log(req.user);
+  if(req.user){
+    if (req.user.id){
+      products.userID=req.user.id;
+      // console.log(products,'----------------------------');
+      let viewed = await viewedModel.create(products);
+      res.json(viewed);
+    }
+  }
+  else{
+    res.json(result);
+  }
 }
 
 // update each product by id by OWNER
