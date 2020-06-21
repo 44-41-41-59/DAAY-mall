@@ -6,4 +6,9 @@ const FavoriteStore = new Schema({
   stores: [{ type: Schema.Types.ObjectId, ref: 'store' }],
 });
 
+FavoriteStore.virtual('store', {
+  ref: 'store',
+  localField: 'store_id',
+  foreignField: 'storeID',
+});
 module.exports = model('favoriteStore', FavoriteStore);

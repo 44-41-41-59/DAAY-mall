@@ -16,13 +16,13 @@ describe('products Model', () => {
     });
   });
 
-  //   it('get product', () => {
-  //     return productsModel.read().then((result) => {
-  //       Object.keys(obj).forEach((key) => {
-  //         expect(result[0][key]).toEqual(obj[key]);
-  //       });
-  //     });
-  //   });
+  it('get product', () => {
+    return productsModel.read().then((result) => {
+      Object.keys(obj).forEach((key) => {
+        expect(result[0][key]).toEqual(obj[key]);
+      });
+    });
+  });
 
   it('put product', () => {
     return productsModel.read().then((result) => {
