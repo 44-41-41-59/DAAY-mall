@@ -2,9 +2,15 @@
 const { Schema, model } = require('mongoose');
 const products = require('../product/product-schema.js');
 
-const ViwedProduct = Schema({
+const Cart = Schema({
   userID: { type: Schema.Types.ObjectId },
   products: { type: Schema.Types.ObjectId, ref: 'product' },
 });
 
-module.exports = model('viewedProduct', ViwedProduct);
+// Cart.virtual('carts', {
+//   ref: 'carts',
+//   localField: '_id',
+//   foreignField: 'productID',
+// });
+
+module.exports = model('cart', Cart);
