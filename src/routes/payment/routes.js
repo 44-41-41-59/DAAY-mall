@@ -6,24 +6,26 @@ const stripe = require('stripe')(process.env.SECERTSTRIPEKEY);
 
 router.route('/charge').post(pay);
 
-function pay(req, res, next) {
+async function pay(req, res, next) {
   const amount = 1000;
-  console.log(req.body);
-  stripe.customers
-    .create({
-      email: req.body.stripeEmail,
-      source: req.body.stripeToken,
-    })
-    .then((customer) => {
-      console.log('cost', customer);
-      stripe.charges.create({
-        amount,
-        description: 'DAAY-mall check',
-        currency: 'usd',
-        customer: customer.id,
-      });
-    })
-    .then((charge) => res.send('done'));
+  // stripe.customers
+  // .create({
+  //   email: req.body.stripeEmail,
+  //   source: req.body.stripeToken,
+  // })
+  // .then((customer) => {
+  //   stripe.charges.create({
+  //     amount,
+  //     description: 'DAAY-mall check',
+  //     currency: 'usd',
+  //     customer: customer.id,
+  //   });
+  // })
+  // .then((charge) => {
+
+  //   res.send('done');
+  // })
+  // .catch((e) => next({ status: 500, message: e.message }));
 }
 
 module.exports = router;
