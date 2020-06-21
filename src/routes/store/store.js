@@ -15,7 +15,7 @@ function getOwnerAllStores(req, res, next){
 }
 // USER get one store by id
 function getOneStore(req, res, next){
-  storeModel.read(req.params.store_id).then((data)=> res.json(data))
+  storeModel.read({_id:req.params.store_id}).then((data)=> res.json(data))
     .catch(next);   
 }
 // OWNER add new store 
@@ -32,13 +32,18 @@ function addStore(req, res, next){
 }
 // OWNER edit store detail by store id/ admin patch each store to change its status by store id
 function editStore(req, res, next){
-  storeModel.update(req.params.store_id, req.body).then(data=> res.json(data))
+  storeModel.update({_id:req.params.store_id}, req.body).then(data=> res.json(data))
     .catch(next); 
 }
 // OWNER delete store/ ADMIN delete store
 function deleteStore(req, res, next){
   // should also delete all products that has the store ID 
-  storeModel.delete(req.params.store_id).then(data=> res.json(data))
+  storeModel.delete({_id:req.params.store_id}).then(data=> res.json(data))
+    .catch(next);  
+}
+// get all pending stores in the admin dashboard
+function getPendingStores(req, res, next){
+  storeModel.read({status: 'pending'}).then(data=> res.json(data))
     .catch(next);  
 }
 
@@ -49,4 +54,5 @@ module.exports = {
   addStore,
   editStore,
   deleteStore,
+  getPendingStores,
 };
