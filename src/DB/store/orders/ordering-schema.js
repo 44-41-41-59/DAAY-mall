@@ -1,9 +1,10 @@
 'use strict';
 const { Schema, model } = require('mongoose');
-const products = require('../product/product-schema.js');
 
-const WishList = Schema({
+const ordering = Schema({
   products: [{ type: Schema.Types.ObjectId, ref: 'product' }],
+  userID: { type: Schema.Types.ObjectId,  ref: 'user' },
 });
 
-module.exports = model('wishlist', WishList);
+
+module.exports = model('order', ordering);

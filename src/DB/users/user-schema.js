@@ -2,10 +2,9 @@
 'use strict';
 require('dotenv').config();
 const { Schema, model } = require('mongoose');
-// const favorite = require('../subdocuments/favorite-schema.js');
 const viwedProduct = require('../subdocuments/viwed-schema.js');
-// const cart = require('../subdocuments/cart-schema.js');
 const wishlist = require('../subdocuments/wishlist-schema.js');
+
 const paymentsHistory = require('../subdocuments/payments-history-schema.js');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -40,7 +39,7 @@ const user = Schema(
     favoriteStores: [{ type: Schema.Types.ObjectId, ref: 'favoriteStore' }],
     viwedProducts: [{ type: Schema.Types.ObjectId, ref: 'viwedProduct' }],
     cart: [{ type: Schema.Types.ObjectId, ref: 'cart' }],
-    wishlist: [{ type: Schema.Types.ObjectId, ref: 'wishlist' }],
+    // wishlist: [{ type: Schema.Types.ObjectId, ref: 'wishlist' }],
     paymentsHistory: [{ type: Schema.Types.ObjectId, ref: 'paymintsHistory' }],
   },
   { toObject: { virtuals: true } },
@@ -60,6 +59,12 @@ user.virtual('acl', {
   localField: 'role',
   foreignField: 'role',
   justOne: true,
+});
+
+user.virtual('wishlist', {
+  ref: 'wishlist',
+  localField: '_id',
+  foreignField: 'userID',
 });
 
 // pre save hook for hashing the password before saving in database

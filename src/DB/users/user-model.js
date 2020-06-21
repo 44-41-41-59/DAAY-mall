@@ -40,7 +40,7 @@ class UserCollection {
         .findOne({
           email: userInfo.email,
         })
-        .populate('acl');
+        .populate('acl').populate('wishlist').populate('review').populate('productID').exec();
 
       if (record) {
         let valid = await this.schema.authenticateUser(
@@ -50,7 +50,7 @@ class UserCollection {
         if (valid) {
           let token = await this.schema.generateToken(record._id);
           let userWithNewToken = await this.schema.findOneAndUpdate({ _id: record._id }, { token }, { new: true })
-            .populate('acl');
+            .populate('acl').populate('wishlist').populate('review').populate('productID').exec();
           return userWithNewToken;
         } else {
           return 'Not The same pass';
@@ -59,7 +59,7 @@ class UserCollection {
         return { status: 401, message: 'User is not found!' };
       }
     } else {
-      let record = await this.schema.find({});
+      let record = await this.schema.find({}).populate('acl').populate('review').populate('wishlist').populate('productID').exec();
       return record;
     }
   }

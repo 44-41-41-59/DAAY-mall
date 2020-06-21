@@ -8,9 +8,8 @@ class Model {
   constructor(schema) {
     this.schema = schema;
   }
-  read(_id) {
-    const queryObject = _id ? { _id } : {};
-    return this.schema.find(queryObject).populate('products');
+  read(obj) {
+    return this.schema.find(obj).populate('products').populate('reviews').populate('orders');
   }
   /** Method to create a new record and save it to the db */
   create(record) {
@@ -18,12 +17,12 @@ class Model {
     return newRecord.save();
   }
   /** Method to find a record in db using id and update it */
-  update(_id, record) {
-    return this.schema.findByIdAndUpdate(_id, record, { new: true });
+  update(obj, record) {
+    return this.schema.findByIdAndUpdate(obj, record, { new: true });
   }
   /** Method to find a record in db using id and delete it */
-  delete(_id) {
-    return this.schema.findByIdAndDelete(_id);
+  delete(obj) {
+    return this.schema.findByIdAndDelete(obj);
   }
 }
 

@@ -2,7 +2,7 @@
 
 ---
 
-## We are deployed on heroku
+## Deployed Link
 
 [DAAY-mall website](https://daay-mall.herokuapp.com/)
 
@@ -122,7 +122,7 @@ npm start
 ### Overall Project Schema
 
 **_[Add a description of your DB schema. Explain the relationships to me.]_**
-![Database Schema](/assets/img/ERD.png)
+![Database Schema](./assets/schemas.png)
 
 ---
 
