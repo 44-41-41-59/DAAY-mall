@@ -15,7 +15,7 @@ router.route('/facebook').post(facebookLogin);
 router.route('/users').get((req,res,next)=>{  
   usersModel.read().then((data)=>{
     data.forEach(user=>{
-      console.log( user.review);
+      console.log( user);
     });
     res.json({count:data.length,users:data});
   });
