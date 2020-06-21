@@ -36,10 +36,6 @@ const user = Schema(
     },
     facebookID: { type: String },
     token: { type: String },
-    favoriteStores: [{ type: Schema.Types.ObjectId, ref: 'favoriteStore' }],
-    viwedProducts: [{ type: Schema.Types.ObjectId, ref: 'viwedProduct' }],
-    cart: [{ type: Schema.Types.ObjectId, ref: 'cart' }],
-    // wishlist: [{ type: Schema.Types.ObjectId, ref: 'wishlist' }],
     paymentsHistory: [{ type: Schema.Types.ObjectId, ref: 'paymintsHistory' }],
   },
   { toObject: { virtuals: true } },
@@ -63,6 +59,24 @@ user.virtual('acl', {
 
 user.virtual('wishlist', {
   ref: 'wishlist',
+  localField: '_id',
+  foreignField: 'userID',
+});
+
+user.virtual('viewedProducts', {
+  ref: 'viewedProduct',
+  localField: '_id',
+  foreignField: 'userID',
+});
+
+user.virtual('carts', {
+  ref: 'cart',
+  localField: '_id',
+  foreignField: 'userID',
+});
+
+user.virtual('favoriteStores', {
+  ref: 'favoriteStore',
   localField: '_id',
   foreignField: 'userID',
 });
