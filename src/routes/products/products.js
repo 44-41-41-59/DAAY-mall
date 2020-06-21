@@ -31,11 +31,10 @@ async function getProductsById(req, res, next) {
     results: products,
   };
   console.log(req.user);
-  
   if(req.user){
     if (req.user.id){
       products.userID=req.user.id;
-      console.log(products,'----------------------------');
+      // console.log(products,'----------------------------');
       let viewed = await viewedModel.create(products);
       res.json(viewed);
     }
