@@ -3,7 +3,8 @@ const { Schema, model } = require('mongoose');
 const products = require('../product/product-schema.js');
 
 const ViwedProduct = Schema({
-  products: [{ type: Schema.Types.ObjectId, ref: 'product' }],
+  userID: { type: Schema.Types.ObjectId },
+  products: { type: Schema.Types.ObjectId, ref: 'product' },
 });
 
-module.exports = model('viwedProduct', ViwedProduct);
+module.exports = model('viewedProduct', ViwedProduct);
