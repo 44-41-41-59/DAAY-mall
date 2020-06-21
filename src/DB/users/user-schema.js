@@ -2,10 +2,10 @@
 'use strict';
 require('dotenv').config();
 const { Schema, model } = require('mongoose');
-const viwedProduct = require('../subdocuments/viwed-schema.js');
+// const viwedProduct = require('../subdocuments/viwed-schema.js');
 // const wishlist = require('../subdocuments/wishlist-schema.js');
 
-const paymentsHistory = require('../subdocuments/payments-history-schema.js');
+// const paymentsHistory = require('../subdocuments/payments-history-schema.js');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const SECRET = process.env.SECRET || 'daaymall';
