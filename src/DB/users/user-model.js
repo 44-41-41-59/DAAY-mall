@@ -1,4 +1,9 @@
 const schema = require('./user-schema.js');
+const jwt = require('jsonwebtoken');
+const SECRET = process.env.SECRET || 'oursecret';
+const Model = require('./mongo');
+require('dotenv').config();
+
 
 // main user collection class
 class UserCollection {
@@ -65,4 +70,26 @@ class UserCollection {
   }
 }
 
+class Users extends Model  {
+  constructor() {
+    super(schema);
+  }
+  async save(record){
+    const result = await this.get({username : record.username});
+    if(result.length == 0){
+      const user = await this.create(record);
+      return user;
+    }
+  
+  }
+
+  generateToken(user){
+  // console.log('-----------------',user.acl);
+    const token = jwt.sign({username: user.username ,id:user._id, exp: Math.floor(Date.now() / 1000) + (15 * 60),capabilities:user.acl ? user.acl.capabilities : [],type: user.type || 'user'}, SECRET);
+    return token;
+  }
+
+}
+
 module.exports = new UserCollection();
+module.exports = new Users();
