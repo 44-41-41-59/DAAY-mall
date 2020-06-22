@@ -91,5 +91,5 @@ class Users extends Model  {
 
 }
 
-module.exports = new UserCollection();
-module.exports = new Users();
+module.exports.userCollection = new UserCollection();
+module.exports.users = new Users();

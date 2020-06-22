@@ -1,7 +1,7 @@
 'use strict';
 require('dotenv').config();
 const superagent = require('superagent');
-const users = require('../../DB/users/user-model');
+const {users} = require('../../DB/users/user-model');
 const tokenServerUrl = 'https://oauth2.googleapis.com/token';
 const remoteAPI = 'https://www.googleapis.com/oauth2/v2/userinfo';
 
