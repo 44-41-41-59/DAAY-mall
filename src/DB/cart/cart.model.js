@@ -18,9 +18,12 @@ class cartModel {
     let newRecord = new this.schema(record);
     return newRecord.save();
   }
-  
-  delete(_id) {
-    return this.schema.findByIdAndDelete(_id);
+
+  delete(obj) {
+    return this.schema.deleteMany(obj);
+  }
+  test(userID) {
+    return this.schema.find({ userID }).populate('products');
   }
 }
 

@@ -4,7 +4,7 @@ const products = require('../product/product-schema.js');
 
 const Cart = Schema({
   userID: { type: Schema.Types.ObjectId },
-  products: [{ type: Schema.Types.ObjectId, ref: 'product' }],
+  products: { type: Schema.Types.ObjectId, ref: 'product' },
 });
 
 // Cart.virtual('carts', {

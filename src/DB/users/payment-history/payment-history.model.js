@@ -1,11 +1,13 @@
 'use strict';
 
-const paymentHistorySchema=require('./payment-history.schema.js');
+const paymentHistorySchema = require('./payment-history.schema.js');
 
 class paymentHistoryModel {
   constructor(schema) {
     this.schema = schema;
   }
+
+  test(record) {}
 
   async read(obj) {
     if (obj === undefined) {
@@ -20,7 +22,9 @@ class paymentHistoryModel {
   }
 
   update(_id, record) {
-    return this.schema.findByIdAndUpdate(_id, record, { new: true }).populate('productID');
+    return this.schema
+      .findByIdAndUpdate(_id, record, { new: true })
+      .populate('productID');
   }
 
   delete(_id) {
