@@ -27,7 +27,15 @@ function getModel(req, res, next) {
   case 'store':
     req.model = storeModel;
     next();
-    return;  
+    return;
+  case 'favorite':
+    req.model = favoriteModel;
+    next();
+    return;
+  case 'products':
+    req.model=productsModel;
+    next();
+    return;     
   default:
     next('invalid model');
     return;
@@ -44,7 +52,12 @@ function getByIdHandler(req, res, next){
     .catch(next); 
 }
 function deleteHandler(req, res, next){
-  cartModel.delete({ userID: req.params.userID }).then((record) => res.json(record))
+  req.model.delete({ userID: req.params.userID }).then((record) => res.json(record))
+    .catch(next);
+}
+
+function deleteByIdHandler(req, res, next){
+  req.model.delete(req.params.id).then((record) => res.json(record))
     .catch(next);
 }
 
@@ -100,22 +113,25 @@ function getFavorite(req, res, next){
 }
 
 function addFavorite(req, res, next){
-  let storeID = req.body.storeID;
-  storeModel.read({_id:storeID}).then((data) =>{
-    data.userID = req.body.userID;
-    return favoriteModel.create(data);
-  }).then((result)=>{
+  let obj = {
+    userID:req.body.userID,
+    stores:req.body.stores,
+  };
+  favoriteModel.create(obj).then((result)=>{
     res.json({favoriteModel: result}) ; 
   }) 
     .catch(next);
 }
-function deleteFavorite (req, res , next){
-  let id = req.params.id;
-  favoriteModel.delete(id)
-    .then(record=>{
-      res.json(record);
-    }).catch(next);
-}
+
+// function deleteFavorite (req, res , next){
+//   let id = req.params.id;
+//   favoriteModel.delete(id)
+//     .then(record=>{
+//       res.json(record);
+//     }).catch(next);
+// }
+
+
 
 // charge-------------------------------------------------------
 
@@ -193,9 +209,10 @@ async function pay(req, res, next) {
 // }
 
 // delete one item form the payment history
-function deletePaymentHistory(req, res, next){
-  payementHistoryModel.delete(req.params.id).then(data=>res.send(`Payment history ${req.params.id} deleted.`));
-}
+// function deletePaymentHistory(req, res, next){
+//   payementHistoryModel.delete(req.params.id).then(data=>res.send(`Payment history ${req.params.id} deleted.`));
+// }
+
 // get one item form a payment history 
 // function getOnePaymentHistory(req, res, next){
 //   payementHistoryModel.read({_id:req.params.id}).then(data=>res.json({paymentHistory:data[0]}));
@@ -257,15 +274,15 @@ async function updateProducts(req,res,next){
   }
 }
 // delete each product by id by OWNER
-async function deleteProducts(req,res,next){
-  try {
-    let id = req.params.id;
-    await productsModel.delete(id);
-    res.json('Product is Deleted');
-  } catch (e) {
-    next(e.message);
-  }
-}
+// async function deleteProducts(req,res,next){
+//   try {
+//     let id = req.params.id;
+//     await productsModel.delete(id);
+//     res.json('Product is Deleted');
+//   } catch (e) {
+//     next(e.message);
+//   }
+// }
 // get all products for each store by store id by OWNER/USER
 async function getStoreProducts(req,res,next){
   let storeProducts = await productsModel.read({storeID: req.params.store_id});
@@ -313,13 +330,13 @@ function addReview(req, res, next){
     }).catch(next);
 }
 
-function deleteReview (req, res , next){
-  let id = req.params.id;
-  reviewModel.delete(id)
-    .then(record=>{
-      res.json(record);
-    }).catch(next);
-}
+// function deleteReview (req, res , next){
+//   let id = req.params.id;
+//   reviewModel.delete(id)
+//     .then(record=>{
+//       res.json(record);
+//     }).catch(next);
+// }
 
 function editReview (req, res , next){
   let id = req.params.id;
@@ -367,11 +384,11 @@ function editStore(req, res, next){
     .catch(next); 
 }
 // OWNER delete store/ ADMIN delete store
-function deleteStore(req, res, next){
-  // should also delete all products that has the store ID 
-  storeModel.delete({_id:req.params.store_id}).then(data=> res.json(data))
-    .catch(next);  
-}
+// function deleteStore(req, res, next){
+//   // should also delete all products that has the store ID 
+//   storeModel.delete({_id:req.params.store_id}).then(data=> res.json(data))
+//     .catch(next);  
+// }
 // get all pending stores in the admin dashboard
 function getPendingStores(req, res, next){
   storeModel.read({status: 'pending'}).then(data=> res.json(data))
@@ -411,15 +428,15 @@ function getAllOrders(req, res, next){
 //   }    
 // }
 
-function deleteOrder(req, res, next){
-  try{
-    orderModel.delete({_id:req.params.id}).then(data=> res.json(data))
-      .catch(next); 
+// function deleteOrder(req, res, next){
+//   try{
+//     orderModel.delete({_id:req.params.id}).then(data=> res.json(data))
+//       .catch(next); 
 
-  } catch (e){
-    res.send(e.message);
-  }    
-}
+//   } catch (e){
+//     res.send(e.message);
+//   }    
+// }
 
 // Wish-list ---------------------------------------------------
 
@@ -457,15 +474,15 @@ async function updateWishlist(req,res,next){
   }
 }
 
-async function deleteFromWishlist(req,res,next){
-  try {
-    let id = req.params.id;
-    await wishListModel.delete(id);
-    res.json('Item is Deleted');
-  } catch (e) {
-    next(e.message);
-  }
-}
+// async function deleteFromWishlist(req,res,next){
+//   try {
+//     let id = req.params.id;
+//     await wishListModel.delete(id);
+//     res.json('Item is Deleted');
+//   } catch (e) {
+//     next(e.message);
+//   }
+// }
 //--------------------------------------------------------------
 
 
@@ -479,40 +496,30 @@ async function deleteFromWishlist(req,res,next){
 
 
 module.exports = {
-  
   addCart,
   getFavorite,
   addFavorite,
-  deleteFavorite,
-
   pay,
-
-  deletePaymentHistory,
   addProductsHandler,
   getProducts,
   getProductsById,
   updateProducts,
-  deleteProducts,
   getStoreProducts,
   getReviews,
   addReview,
   editReview,
-  deleteReview,
   getAllStores,
   getOwnerAllStores,
   addStore,
   editStore,
-  deleteStore,
   getPendingStores,
   editOrder,
   getAllOrders,
-  deleteOrder,
   addProductsToWishlist,
   updateWishlist,
-  deleteFromWishlist,
-
   getModel,
   getHandler,
   getByIdHandler,
   deleteHandler,
+  deleteByIdHandler,
 };
