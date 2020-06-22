@@ -75,6 +75,11 @@ function addHandler(req, res, next) {
     .catch(next);
 }
 
+function updateHandler(req, res, next){
+  storeModel.update({_id:req.params.store_id}, req.body).then(data=> res.json(data))
+    .catch(next); 
+}
+
 
 /// cart handlers----------------------------------------------------
 const cartModel = require('../DB/cart/cart.model');
@@ -266,18 +271,6 @@ function getOwnerAllStores(req, res, next){
     .catch(next);     
 }
 
-// OWNER add new store 
-// function addStore(req, res, next){
-//   try{
-//     storeModel.create(req.body).then(data=> {
-//       res.json(data);
-//     })
-//       .catch(next);
-
-//   } catch (e){
-//     res.send(e.message);
-//   }
-// }
 // OWNER edit store detail by store id/ admin patch each store to change its status by store id
 function editStore(req, res, next){
   storeModel.update({_id:req.params.store_id}, req.body).then(data=> res.json(data))
@@ -374,6 +367,7 @@ module.exports = {
   addProductsToWishlist,
   updateWishlist,
 
+  updateHandler,
   addHandler,
   getHandler,
   getProductsById,
