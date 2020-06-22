@@ -3,34 +3,39 @@ const router = express.Router();
 const bearer = require('../middlewares/auth/bearer');
 const permissions = require('../middlewares/auth/authorize');
 // require all functions
-const { addCart,  
-  getFavorite, addFavorite, 
-  pay,
-  addProductsHandler, getProducts, getProductsById, updateProducts, 
-  getStoreProducts, getReviews, addReview, editReview, 
-  getAllStores, getOwnerAllStores, addStore, editStore,  getPendingStores,
-  editOrder, getAllOrders, addProductsToWishlist, updateWishlist, getModel,getHandler,deleteHandler,getByIdHandler,deleteByIdHandler,
+const {
+  getFavorite,  
+  pay, getProductsById, updateProducts, 
+  getStoreProducts, getReviews, addReview, editReview, getOwnerAllStores, editStore,  getPendingStores,
+  editOrder, getAllOrders, addProductsToWishlist, updateWishlist, getModel,deleteHandler,getByIdHandler,deleteByIdHandler,getByUserHandler,getHandler,addHandler,
 } = require('./handlers.js');
 
 router.param('model', getModel);
-router.route('/:model/:userID').get(getHandler).delete(deleteHandler);
+router.route('/:model').get(getHandler);
+router.route('/:model/:userID').get(getByUserHandler).delete(deleteHandler);
 router.route('/:model/:model/:id').get(getByIdHandler).delete(deleteByIdHandler);
+router.route('/:model').post(addHandler);
+
+
+// create payment history and send all orders for each store
+router.route('/charge').post(pay);
 
 
 // routes
+
 // get all favorite stores for one user // add one store to user's favorite stores list
-router.route('/favorite').get(bearer('registered'), getFavorite).post(bearer('registered'), addFavorite);
+router.route('/favorite').get(bearer('registered'), getFavorite);
+// post(bearer('registered'), addFavorite);.
 // delete one store from user's favorite list
 // router.route('/favorite/:id').delete(deleteFavorite);
 
 // get all carts for one user // add an item(product) to the cart
 // router.route('/cart/:userID').get(getCart);
-router.route('/cart').post(addCart);
+// router.route('/cart').post(addCart);s
 // get one item from one cart (shows the amount for the product) // patch(edit amount of the product) // delete 
 // router.route('/cart/:id').get(getOneCart).patch(editCart).delete(deleteCart);
 
-// create payment history and send all orders for each store
-router.route('/charge').post(pay);
+
 // get payment history for one user
 // router.route('/payment/history/all/:user_id').get(getPaymentHistory);
 // get or delete one item form the payment history
@@ -39,11 +44,11 @@ router.route('/charge').post(pay);
 
 
 // get all products from all stores by USER
-router.route('/products').get(getProducts);
+// router.route('/products').get(getProducts);
 // get one product from all stores by USER/OWNER
 router.route('/products/:id').get(bearer('none'),getProductsById);
 // add products for each store by OWNER
-router.route('/products').post(bearer('registered'), permissions('create'), addProductsHandler);
+// router.route('/products').post(bearer('registered'), permissions('create'), addProductsHandler);
 // update each product by id by OWNER
 router.route('/products/:id').put(bearer('registered'), permissions('update'), updateProducts);
 // delete each product by id by OWNER
@@ -65,7 +70,7 @@ router.route('/order/:id').patch(editOrder);
 // .delete(deleteOrder); // delete only if status is delivered
 
 // create new store by USER/ get all stores by USER
-router.route('/store').post(addStore).get(getAllStores);
+// router.route('/store').post(addStore).get(getAllStores);
 // get all pending stores in the admin dashboard
 router.route('/store/admin/dashboard').get(bearer, permissions('readPendingStores'),getPendingStores);
 // get all the stores owned by one owner by USER
