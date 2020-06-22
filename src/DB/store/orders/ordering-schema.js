@@ -10,6 +10,7 @@ const ordering = Schema({
     enum: ['waiting', 'delivered'],
     required: true,
   },
+  storeID: { type: Schema.Types.ObjectId },
 });
 
 module.exports = model('order', ordering);

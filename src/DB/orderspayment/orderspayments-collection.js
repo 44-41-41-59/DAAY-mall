@@ -6,8 +6,9 @@ class OrdersPaymentCollection {
   }
   async read() {}
   async create(obj) {
-    let recorde = this.schema.create();
+    let recorde = new this.schema(obj);
     let resulte = recorde.save();
     return resulte;
   }
 }
+module.exports = new OrdersPaymentCollection();
