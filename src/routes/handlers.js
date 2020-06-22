@@ -12,15 +12,42 @@ function getModel(req, res, next) {
     req.model = wishListModel;
     next();
     return;
+  case 'payment':
+    req.model = payementHistoryModel;
+    next();
+    return;  
+  case 'review':
+    req.model = reviewModel;
+    next();
+    return;  
+  case 'order':
+    req.model = orderModel;
+    next();
+    return;  
+  case 'store':
+    req.model = storeModel;
+    next();
+    return;  
   default:
     next('invalid model');
     return;
   }
 }
-
-function get(req, res, next) {
-  req.model.read({userID: req.params.userID}).then((data) => res.json({results:data[0]}));
+// function that gets wishlist, cart and payment history by passing user id as a param
+function getHandler(req, res, next) {
+  req.model.read({userID: req.params.userID}).then((data) => res.json({results:data[0]}))
+    .catch(next);
 }
+// get one paymenthistory, cart, review, order, store
+function getByIdHandler(req, res, next){
+  req.model.read({ _id: req.params.id }).then((data) => res.json({ count: data.length, results: data }))
+    .catch(next); 
+}
+function deleteHandler(req, res, next){
+  cartModel.delete({ userID: req.params.userID }).then((record) => res.json(record))
+    .catch(next);
+}
+
 
 /// cart handlers----------------------------------------------------
 const cartModel = require('../DB/cart/cart.model');
@@ -28,12 +55,12 @@ const cartModel = require('../DB/cart/cart.model');
 // function getCart(req, res, next) {
 //   cartModel.read({userID: req.params.userID}).then((data) => res.json({results:data[0]}));
 // }
-function getOneCart(req, res, next) {
-  cartModel
-    .read({ _id: req.params.id })
-    .then((data) => res.json({ count: data.length, results: data }))
-    .catch(next);
-}
+// function getOneCart(req, res, next) {
+//   cartModel
+//     .read({ _id: req.params.id })
+//     .then((data) => res.json({ count: data.length, results: data }))
+//     .catch(next);
+// }
 function addCart(req, res, next) {
   cartModel
     .create(req.body)
@@ -46,16 +73,16 @@ function addCart(req, res, next) {
 //   cartModel.update()
 // }
 
-function deleteCart(req, res, next) {
-  let userID = req.params.id;
-  console.log(userID);
-  cartModel
-    .delete({ userID })
-    .then((record) => {
-      res.json(record);
-    })
-    .catch(next);
-}
+// function deleteCart(req, res, next) {
+//   let userID = req.params.id;
+//   console.log(userID);
+//   cartModel
+//     .delete({ userID })
+//     .then((record) => {
+//       res.json(record);
+//     })
+//     .catch(next);
+// }
 
 // Favorites---------------------------------------------------------------------
 
@@ -106,6 +133,7 @@ async function pay(req, res, next) {
   let storeProductIDs = [];
   let amount = 0; // it should be called amount for stripe DONT change it 
   let cartArr = await cart.test(req.body.userID); // array of object(cart based on user populated with products)
+  console.log('anolla', cartArr);
   cartArr.forEach((element) => {
     storeProductIDs.push(element.products._id);
     amount += element.products.price;
@@ -160,18 +188,18 @@ async function pay(req, res, next) {
 // Payment history----------------------------------------------
 
 // get all of the payment history for one user
-function getPaymentHistory(req, res, next){
-  payementHistoryModel.read({userID:req.params.user_id}).then(data=> res.json({count:data.length, results:data}));
-}
+// function getPaymentHistory(req, res, next){
+//   payementHistoryModel.read({userID:req.params.user_id}).then(data=> res.json({count:data.length, results:data}));
+// }
 
 // delete one item form the payment history
 function deletePaymentHistory(req, res, next){
   payementHistoryModel.delete(req.params.id).then(data=>res.send(`Payment history ${req.params.id} deleted.`));
 }
 // get one item form a payment history 
-function getOnePaymentHistory(req, res, next){
-  payementHistoryModel.read({_id:req.params.id}).then(data=>res.json({paymentHistory:data[0]}));
-}
+// function getOnePaymentHistory(req, res, next){
+//   payementHistoryModel.read({_id:req.params.id}).then(data=>res.json({paymentHistory:data[0]}));
+// }
 
 // Product -----------------------------------------------------
 
@@ -267,10 +295,10 @@ function getReviews(req, res, next){
 }
 
 // get a specifc review on one product or one store // can be refactored to be joined with the previous function
-function getOneReview(req, res, next){
-  reviewModel.read({_id:req.params.id}).then((data) => res.json({ count: data.length, results: data }))
-    .catch(next);
-}
+// function getOneReview(req, res, next){
+//   reviewModel.read({_id:req.params.id}).then((data) => res.json({ count: data.length, results: data }))
+//     .catch(next);
+// }
 
 // add one review on a product or a store
 function addReview(req, res, next){
@@ -317,10 +345,10 @@ function getOwnerAllStores(req, res, next){
     .catch(next);     
 }
 // USER get one store by id
-function getOneStore(req, res, next){
-  storeModel.read({_id:req.params.store_id}).then((data)=> res.json(data))
-    .catch(next);   
-}
+// function getOneStore(req, res, next){
+//   storeModel.read({_id:req.params.store_id}).then((data)=> res.json(data))
+//     .catch(next);   
+// }
 // OWNER add new store 
 function addStore(req, res, next){
   try{
@@ -373,15 +401,15 @@ function getAllOrders(req, res, next){
     res.send(e.message);
   }  
 }
-function getOneOrder(req, res, next){
-  try{
-    orderModel.read({_id:req.params.id}).then(data=> res.json(data))
-      .catch(next); 
+// function getOneOrder(req, res, next){
+//   try{
+//     orderModel.read({_id:req.params.id}).then(data=> res.json(data))
+//       .catch(next); 
 
-  } catch (e){
-    res.send(e.message);
-  }    
-}
+//   } catch (e){
+//     res.send(e.message);
+//   }    
+// }
 
 function deleteOrder(req, res, next){
   try{
@@ -452,18 +480,14 @@ async function deleteFromWishlist(req,res,next){
 
 module.exports = {
   
-  getOneCart,
   addCart,
-  deleteCart,
   getFavorite,
   addFavorite,
   deleteFavorite,
 
   pay,
 
-  getPaymentHistory,
   deletePaymentHistory,
-  getOnePaymentHistory, 
   addProductsHandler,
   getProducts,
   getProductsById,
@@ -471,25 +495,24 @@ module.exports = {
   deleteProducts,
   getStoreProducts,
   getReviews,
-  getOneReview,
   addReview,
   editReview,
   deleteReview,
   getAllStores,
   getOwnerAllStores,
-  getOneStore,
   addStore,
   editStore,
   deleteStore,
   getPendingStores,
   editOrder,
   getAllOrders,
-  getOneOrder,
   deleteOrder,
   addProductsToWishlist,
   updateWishlist,
   deleteFromWishlist,
 
   getModel,
-  get,
+  getHandler,
+  getByIdHandler,
+  deleteHandler,
 };

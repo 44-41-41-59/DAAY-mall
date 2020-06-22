@@ -3,20 +3,22 @@ const router = express.Router();
 const bearer = require('../middlewares/auth/bearer');
 const permissions = require('../middlewares/auth/authorize');
 // require all functions
-const { getCart, getOneCart, addCart, editCart, deleteCart, 
+const { addCart, editCart, 
   getFavorite, addFavorite, deleteFavorite,
   pay,
-  getPaymentHistory, deletePaymentHistory, getOnePaymentHistory, 
+  deletePaymentHistory,
   addProductsHandler, getProducts, getProductsById, updateProducts, deleteProducts,
-  getStoreProducts, getReviews, getOneReview, addReview, editReview, deleteReview,
-  getAllStores, getOwnerAllStores, getOneStore, addStore, editStore, deleteStore, getPendingStores,
-  editOrder, getAllOrders, getOneOrder, deleteOrder,addProductsToWishlist, updateWishlist, deleteFromWishlist,getModel,get,
+  getStoreProducts, getReviews, addReview, editReview, deleteReview,
+  getAllStores, getOwnerAllStores, addStore, editStore, deleteStore, getPendingStores,
+  editOrder, getAllOrders, deleteOrder,addProductsToWishlist, updateWishlist, deleteFromWishlist,getModel,getHandler,deleteHandler,getByIdHandler,
 } = require('./handlers.js');
 
 router.param('model', getModel);
-router.route('/:model/:userID').get(get);
-// routes
+router.route('/:model/:userID').get(getHandler).delete(deleteHandler);
+router.route('/:model/:model/:id').get(getByIdHandler).delete(deleteHandler);
 
+
+// routes
 // get all favorite stores for one user // add one store to user's favorite stores list
 router.route('/favorite').get(bearer('registered'), getFavorite).post(bearer('registered'), addFavorite);
 // delete one store from user's favorite list
@@ -31,9 +33,10 @@ router.route('/cart').post(addCart);
 // create payment history and send all orders for each store
 router.route('/charge').post(pay);
 // get payment history for one user
-router.route('/payment/history/all/:user_id').get(getPaymentHistory);
+// router.route('/payment/history/all/:user_id').get(getPaymentHistory);
 // get or delete one item form the payment history
-router.route('/payment/history/:id').get(getOnePaymentHistory).delete(deletePaymentHistory);
+// router.route('/payment/history/:id').get(getOnePaymentHistory);
+router.route('/payment/history/:id').delete(deletePaymentHistory);
 
 
 // get all products from all stores by USER
@@ -52,11 +55,13 @@ router.route('/products/:store_id').get(getStoreProducts);
 //get all reviews for one product or store or if you dont put query you will get all the reviews for everything/ add one review to a product (you should pass the productID as a query)
 router.route('/review').get(getReviews).post(addReview);
 // get one review on a specific product or store / edit one review on a product or store/ delete one review on a product or a store
-router.route('/review/:id').get(getOneReview).put(editReview).delete(deleteReview);
+// router.route('/review/:id').get(getOneReview);
+router.route('/review/:id').put(editReview).delete(deleteReview);
 
 // get all orders for one store
 router.route('/order/store/:storeID').get(getAllOrders);
-router.route('/order/:id').patch(editOrder).get(getOneOrder).delete(deleteOrder); // delete only if status is delivered
+// router.route('/order/:id').get(getOneOrder);
+router.route('/order/:id').patch(editOrder).delete(deleteOrder); // delete only if status is delivered
 
 // create new store by USER/ get all stores by USER
 router.route('/store').post(addStore).get(getAllStores);
@@ -65,7 +70,8 @@ router.route('/store/admin/dashboard').get(bearer, permissions('readPendingStore
 // get all the stores owned by one owner by USER
 router.route('/store/:owner_id').get(getOwnerAllStores);
 // get one store by store ID by USER/  edit one store by OWNER / edit one store status by ADMIN / delete one store by OWNER and ADMIN 
-router.route('/store/:store_id').get(getOneStore).put(bearer, permissions('update'), editStore).patch(bearer, permissions('updateStoreStatus'), editStore).delete(bearer, permissions('delete'), deleteStore);
+// router.route('/store/:store_id').get(getOneStore);
+router.route('/store/:store_id').put(bearer, permissions('update'), editStore).patch(bearer, permissions('updateStoreStatus'), editStore).delete(bearer, permissions('delete'), deleteStore);
 
 // get wish-list 
 // router.get('/wishlist/:userID',getWishlist);
