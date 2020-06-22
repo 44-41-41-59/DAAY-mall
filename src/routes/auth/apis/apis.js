@@ -73,8 +73,15 @@ async function facebookLogin(req, res) {
     res.json({ status: 'error', data: 'stop' });
   }
 }
+
+function googleLogin (req, res){
+  res.json({ token: req.token, user: req.user });
+}
+
+
 module.exports = {
   signin,
   signup,
   facebookLogin,
+  googleLogin,
 };
