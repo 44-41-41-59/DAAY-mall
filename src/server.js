@@ -15,6 +15,7 @@ const whishlistRoutes=require('./routes/whishlist/routes.js');
 const pay = require('./routes/payment/routes.js');
 const orderRoutes = require('./routes/store/orders/routes.js');
 const paymentHistory = require('./routes/payment/payment-history/routes.js');
+const mainRouter = require('./routes/mainRoutes');
 
 
 const app = express();
@@ -28,23 +29,27 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/auth', auth);
 // used to seed the roles into the database one time
 app.use('/seedroles', seedRoles);
+
+// mainRouter
+app.use(mainRouter);
+
 // products routes
-app.use(productsRoute);
-// reviews routes
-app.use(reviewsRoute);
-// stores routes
-app.use(storeRoutes);
-// favorite routes
-app.use(favoriteRoutes);
-// cart routes
-app.use(cartRoutes);
-// whishlist routes
-app.use(whishlistRoutes);
-app.use(pay);
-// orders routes
-app.use(orderRoutes);
-// payment history routes
-app.use(paymentHistory);
+// app.use(productsRoute);
+// // reviews routes
+// app.use(reviewsRoute);
+// // stores routes
+// app.use(storeRoutes);
+// // favorite routes
+// app.use(favoriteRoutes);
+// // cart routes
+// app.use(cartRoutes);
+// // whishlist routes
+// app.use(whishlistRoutes);
+// app.use(pay);
+// // orders routes
+// app.use(orderRoutes);
+// // payment history routes
+// app.use(paymentHistory);
 
 
 

@@ -8,7 +8,7 @@ const { addOrder, editOrder, getAllOrders, getOneOrder, deleteOrder } = require(
 // update the order in both the order list and payment history (user or owner update it)
 // the orders can't be deleted but rather cancelled
 
-router.route('/order').post(addOrder).get(getAllOrders);
+router.route('/order').post(addOrder).get(getAllOrders); // it should be all orders for one store
 router.route('/order/:id').put(editOrder).patch(editOrder).get(getOneOrder).delete(deleteOrder);
 
 module.exports = router;
