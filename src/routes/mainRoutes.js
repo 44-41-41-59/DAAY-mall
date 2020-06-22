@@ -10,10 +10,11 @@ const { getCart, getOneCart, addCart, editCart, deleteCart,
   addProductsHandler, getProducts, getProductsById, updateProducts, deleteProducts,
   getStoreProducts, getReviews, getOneReview, addReview, editReview, deleteReview,
   getAllStores, getOwnerAllStores, getOneStore, addStore, editStore, deleteStore, getPendingStores,
-  editOrder, getAllOrders, getOneOrder, deleteOrder,
-  getWishlist, addProductsToWishlist, updateWishlist, deleteFromWishlist,
+  editOrder, getAllOrders, getOneOrder, deleteOrder,addProductsToWishlist, updateWishlist, deleteFromWishlist,getModel,get,
 } = require('./handlers.js');
 
+router.param('model', getModel);
+router.route('/:model/:userID').get(get);
 // routes
 
 // get all favorite stores for one user // add one store to user's favorite stores list
@@ -22,7 +23,8 @@ router.route('/favorite').get(bearer('registered'), getFavorite).post(bearer('re
 router.route('/favorite/:id').delete(deleteFavorite);
 
 // get all carts for one user // add an item(product) to the cart
-router.route('/cart').get(getCart).post(addCart);
+// router.route('/cart/:userID').get(getCart);
+router.route('/cart').post(addCart);
 // get one item from one cart (shows the amount for the product) // patch(edit amount of the product) // delete 
 // router.route('/cart/:id').get(getOneCart).patch(editCart).delete(deleteCart);
 
@@ -66,7 +68,7 @@ router.route('/store/:owner_id').get(getOwnerAllStores);
 router.route('/store/:store_id').get(getOneStore).put(bearer, permissions('update'), editStore).patch(bearer, permissions('updateStoreStatus'), editStore).delete(bearer, permissions('delete'), deleteStore);
 
 // get wish-list 
-router.get('/wishlist/:userID',getWishlist);
+// router.get('/wishlist/:userID',getWishlist);
 router.post('/wishlist',addProductsToWishlist); // pass the userID in the token
 router.put('/wishlist/user/:id',updateWishlist);
 router.delete('/wishlist/user/:id',deleteFromWishlist);

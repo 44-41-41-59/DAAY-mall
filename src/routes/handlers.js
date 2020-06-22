@@ -1,11 +1,33 @@
 'use strict';
 
+
+function getModel(req, res, next) {
+  const model = req.params.model;
+  switch (model) {
+  case 'cart':
+    req.model = cartModel;
+    next();
+    return;
+  case 'wishlist':
+    req.model = wishListModel;
+    next();
+    return;
+  default:
+    next('invalid model');
+    return;
+  }
+}
+
+function get(req, res, next) {
+  req.model.read({userID: req.params.userID}).then((data) => res.json({results:data[0]}));
+}
+
 /// cart handlers----------------------------------------------------
 const cartModel = require('../DB/cart/cart.model');
 
-function getCart(req, res, next) {
-  cartModel.read(req.qurey).then((data) => res.json(data));
-}
+// function getCart(req, res, next) {
+//   cartModel.read({userID: req.params.userID}).then((data) => res.json({results:data[0]}));
+// }
 function getOneCart(req, res, next) {
   cartModel
     .read({ _id: req.params.id })
@@ -73,7 +95,7 @@ function deleteFavorite (req, res , next){
 const stripe = require('stripe')(process.env.SECERTSTRIPEKEY);
 const cart = require('../DB/cart/cart.model.js');
 const payments = require('../DB/orderspayment/orderspayments-collection');
-const payementHistory = require('../DB/users/payment-history/payment-history.model.js');
+const payementHistoryModel = require('../DB/users/payment-history/payment-history.model');
 const order = require('../DB/store/orders/orders.model.js');
 // const stripe = require('stripe')(process.env.SECERTSTRIPEKEY);
 
@@ -91,7 +113,7 @@ async function pay(req, res, next) {
       obj[element.products.storeID].push(element.products._id);
     else obj[element.products.storeID] = [element.products._id]; // create array for the store to store the product ids
   });
-  let savedPayment= await payementHistory.create({
+  let savedPayment= await payementHistoryModel.create({
     userID: req.body.userID,
     productID: storeProductIDs,
     cost: amount,
@@ -137,16 +159,11 @@ async function pay(req, res, next) {
 
 // Payment history----------------------------------------------
 
-const payementHistoryModel = require('../DB/users/payment-history/payment-history.model');
-
 // get all of the payment history for one user
 function getPaymentHistory(req, res, next){
   payementHistoryModel.read({userID:req.params.user_id}).then(data=> res.json({count:data.length, results:data}));
 }
-// add one item to the payment history
-function addPaymentHistory(req, res, next){
-  payementHistoryModel.create(req.body).then(data=>res.json({result:data}));
-}
+
 // delete one item form the payment history
 function deletePaymentHistory(req, res, next){
   payementHistoryModel.delete(req.params.id).then(data=>res.send(`Payment history ${req.params.id} deleted.`));
@@ -380,16 +397,17 @@ function deleteOrder(req, res, next){
 
 const wishListModel =require('../DB/whishlist/whishlist-model');
 
-async function getWishlist (req,res,next){
-  try{
-    let userID= req.params.userID;
-    let data = await wishListModel.read(userID);
-    res.json(data);
-  }
-  catch(e) {
-    next(e.message);
-  }
-}
+
+// async function getWishlist (req,res,next){
+//   try{
+//     let userID= req.params.userID;
+//     let data = await wishListModel.read(userID);
+//     res.json(data);
+//   }
+//   catch(e) {
+//     next(e.message);
+//   }
+// }
 
 async function addProductsToWishlist (req,res,next){
   try{
@@ -433,7 +451,7 @@ async function deleteFromWishlist(req,res,next){
 
 
 module.exports = {
-  getCart,
+  
   getOneCart,
   addCart,
   deleteCart,
@@ -468,8 +486,10 @@ module.exports = {
   getAllOrders,
   getOneOrder,
   deleteOrder,
-  getWishlist,
   addProductsToWishlist,
   updateWishlist,
   deleteFromWishlist,
+
+  getModel,
+  get,
 };

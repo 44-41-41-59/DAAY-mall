@@ -11,6 +11,7 @@ class cartModel {
     if (obj === undefined) {
       return await this.schema.find({});
     }
+    // console.log(obj);
     return await this.schema.find(obj);
   }
 
