@@ -2,7 +2,7 @@
 require('dotenv').config();
 const express = require('express');
 const router = express.Router();
-const stripe = require('stripe')(process.env.SECERTSTRIPEKEY);
+// const stripe = require('stripe')(process.env.SECERTSTRIPEKEY);
 
 router.route('/charge').post(pay);
 
