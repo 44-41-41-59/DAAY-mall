@@ -2,8 +2,9 @@
 const express = require('express');
 const router = express.Router();
 const BasicAuth = require('../../../middlewares/auth/basic.js');
-const { signup, signin, facebookLogin } = require('../apis/apis.js');
+const { signup, signin, facebookLogin,googleLogin } = require('../apis/apis.js');
 const usersModel = require('../../../DB/users/user-model');
+const oauth=require('../../../middlewares/auth/googleOauth');
 
 // sign up and sign in for users
 router.route('/').post(signup).get(BasicAuth, signin);
@@ -20,5 +21,7 @@ router.route('/users').get((req,res,next)=>{
     res.json({count:data.length,users:data});
   });
 });
+
+router.route('/oauth').get(oauth,googleLogin);
 
 module.exports = router;

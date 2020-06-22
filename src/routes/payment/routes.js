@@ -7,6 +7,8 @@ const cart = require('../../DB/cart/cart.model.js');
 const payments = require('../../DB/orderspayment/orderspayments-collection.js');
 const order = require('../../DB/users/payment-history/payment-history.model.js');
 const pay2 = require('../../DB/store/orders/orders.model.js');
+// const stripe = require('stripe')(process.env.SECERTSTRIPEKEY);
+
 
 router.route('/charge').post(pay);
 
