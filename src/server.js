@@ -6,15 +6,7 @@ const notFound = require('./middlewares/errors/not-found.js');
 const errorHandeler = require('./middlewares/errors/server-error.js');
 const auth = require('./routes/auth/routes/routes.js');
 const seedRoles = require('./routes/seedRoles/routes/routes.js');
-const productsRoute = require('./routes/products/routes');
-const reviewsRoute = require('./routes/reviews/router.js');
-const storeRoutes = require('./routes/store/routes.js');
-const favoriteRoutes = require('./routes/favorite/routes.js');
-const cartRoutes = require('./routes/cart/routes.js');
-const whishlistRoutes = require('./routes/whishlist/routes.js');
-const pay = require('./routes/payment/routes.js');
-const orderRoutes = require('./routes/store/orders/routes.js');
-const paymentHistory = require('./routes/payment/payment-history/routes.js');
+
 const mainRouter = require('./routes/mainRoutes');
 
 
@@ -37,23 +29,6 @@ app.use('/seedroles', seedRoles);
 // mainRouter
 app.use(mainRouter);
 
-// products routes
-// app.use(productsRoute);
-// // reviews routes
-// app.use(reviewsRoute);
-// // stores routes
-// app.use(storeRoutes);
-// // favorite routes
-// app.use(favoriteRoutes);
-// // cart routes
-// app.use(cartRoutes);
-// // whishlist routes
-// app.use(whishlistRoutes);
-// app.use(pay);
-// // orders routes
-// app.use(orderRoutes);
-// // payment history routes
-// app.use(paymentHistory);
 
 app.use('*', notFound);
 app.use(errorHandeler);
