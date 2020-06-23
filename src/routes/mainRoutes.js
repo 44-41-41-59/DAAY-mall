@@ -4,25 +4,12 @@ const bearer = require('../middlewares/auth/bearer');
 const permissions = require('../middlewares/auth/authorize');
 const getModel = require('../middlewares/model-finder');
 
-const {
-  getFavorite,
-  pay,
-  getProductsById,
-  getStoreProducts,
-  getReviews,
-  addReview,
-  getOwnerAllStores,
-  getPendingStores,
-  getAllOrders,
-  addProductsToWishlist,
-  deleteHandler,
-  getByIdHandler,
-  deleteByIdHandler,
-  getByUserHandler,
-  getHandler,
-  addHandler,
-  updateHandler,
+const { getFavorite, pay, getProductsById, getStoreProducts, getReviews, addReview, getOwnerAllStores, getPendingStores,
+  getAllOrders, addProductsToWishlist, deleteHandler,getByIdHandler,deleteByIdHandler,getByUserHandler,getHandler,addHandler, updateHandler, addComplaint,
 } = require('./handlers.js');
+
+router.route('/complaint').patch(addComplaint);
+router.route('/charge').post(pay);
 
 router.param('model', getModel);
 router.route('/:model').get(getHandler);
@@ -34,7 +21,6 @@ router
   .delete(deleteByIdHandler);
 router.route('/:model').post(addHandler);
 router.route('/favorite').get(bearer('registered'), getFavorite);
-router.route('/charge').post(pay);
 // router.route('/products/:id').get(bearer('none'),getProductsById);
 router.route('/products/store/:store_id').get(getStoreProducts);
 router.route('/review').get(getReviews).post(addReview); //with query
