@@ -2,16 +2,9 @@
 
 const stripe = require('stripe')(process.env.SECERTSTRIPEKEY);
 
-const orderModel = require('../DB/store/orders/orders.model');
-const wishListModel = require('../DB/whishlist/whishlist-model');
-const storeModel = require('../DB/store/store.model');
-const productsModel = require('../DB/product/product-model');
 const viewedModel = require('../DB/viewed/viewed-model');
-const reviewModel = require('../DB/review/review.model');
-const cart = require('../DB/cart/cart.model.js');
 const payments = require('../DB/orderspayment/orderspayments-collection');
-const payementHistoryModel = require('../DB/users/payment-history/payment-history.model');
-const order = require('../DB/store/orders/orders.model.js');
+const {order, payment, cart, review, product, store, wishlist} = require('../DB/collection-model'); //payment history //order
 
 
 // function that gets wishlist, cart and payment history by passing user id as a param
@@ -65,7 +58,7 @@ function getFavorite(req, res, next) {
     key = 'storeID';
     favoriteType = req.query.storeID;
   }
-  storeModel.read({ [key]: favoriteType }).then((data) => res.json({ count: data.length, results: data }))
+  store.read({ [key]: favoriteType }).then((data) => res.json({ count: data.length, results: data }))
     .catch(next);
 }
 
@@ -83,7 +76,7 @@ async function pay(req, res, next) {
       obj[element.products.storeID].push(element.products._id);
     else obj[element.products.storeID] = [element.products._id]; // create array for the store to store the product ids
   });
-  let savedPayment = await payementHistoryModel.create({
+  let savedPayment = await payment.create({
     userID: req.body.userID,
     productID: storeProductIDs,
     cost: amount,
@@ -129,7 +122,7 @@ async function pay(req, res, next) {
 
 // get one product by id by USER/OWNER
 async function getProductsById(req, res, next) {
-  let products = await productsModel.read({ _id: req.params.id });
+  let products = await product.read({ _id: req.params.id });
   let result = {
     count: products.length,
     results: products,
@@ -148,14 +141,14 @@ async function getProductsById(req, res, next) {
 
 // get all products for each store by store id by OWNER/USER
 async function getStoreProducts(req, res, next) {
-  let storeProducts = await productsModel.read({ storeID: req.params.store_id });
+  let storeProducts = await product.read({ storeID: req.params.store_id });
   let results = {
     count: storeProducts.length,
     results: storeProducts,
   };
   res.json(results);
 }
-//-------------------------------------------------------------------------------------------------------
+
 // get reviews for one product or one store
 function getReviews(req, res, next) {
   let key, reviewType;
@@ -166,7 +159,7 @@ function getReviews(req, res, next) {
     key = 'storeID';
     reviewType = req.query.storeID;
   }
-  reviewModel.read({ [key]: reviewType }).then((data) => res.json({ count: data.length, results: data }))
+  review.read({ [key]: reviewType }).then((data) => res.json({ count: data.length, results: data }))
     .catch(next);
 }
 // add one review on a product or a store
@@ -176,28 +169,26 @@ function addReview(req, res, next) {
   } else if (req.query.storeID) {
     req.body.storeID = req.query.storeID; //not sure
   }
-  reviewModel.create(req.body)
+  review.create(req.body)
     .then(results => {
       res.json(results);
     }).catch(next);
 }
-//------------------------------------------------------------------------------------
-
 // get all stores in the website
 function getOwnerAllStores(req, res, next) {
-  storeModel.read({ ownerID: req.params.owner_id }).then((data) => res.json({ count: data.length, results: data }))
+  store.read({ ownerID: req.params.owner_id }).then((data) => res.json({ count: data.length, results: data }))
     .catch(next);
 }
 
 // get all pending stores in the admin dashboard
 function getPendingStores(req, res, next) {
-  storeModel.read({ status: 'pending' }).then(data => res.json(data))
+  store.read({ status: 'pending' }).then(data => res.json(data))
     .catch(next);
 }
 
 function getAllOrders(req, res, next) {
   try {
-    orderModel.read({ storeID: req.params.storeID }).then(data => res.json({ count: data.length, results: data }))
+    order.read({ storeID: req.params.storeID }).then(data => res.json({ count: data.length, results: data }))
       .catch(next);
 
   } catch (e) {
@@ -207,7 +198,7 @@ function getAllOrders(req, res, next) {
 
 async function addProductsToWishlist(req, res, next) {
   try {
-    let data = await wishListModel.create(req.body);
+    let data = await wishlist.create(req.body);
     res.json(data);
   }
   catch (e) {
