@@ -1,11 +1,12 @@
 'use strict';
 const { Schema, model } = require('mongoose');
 
-const OrdersPayments = Schema({
+const adminPaymentHistory = Schema({
   userID: { type: Schema.Types.ObjectId },
   orders: [{ type: Schema.Types.ObjectId, ref: 'order' }],
   paymentsHistory: { type: Schema.Types.ObjectId, ref: 'paymentsHistory' },
-  invalid: { type: Schema.Types.ObjectId, ref: 'order' },
-});
+  invalid: [{ type: Schema.Types.ObjectId, ref: 'order' }],
+},
+{ timestamps: { createdAt: 'created_at' }});
 
-module.exports = model('orderpayment', OrdersPayments);
+module.exports = model('adminPaymentHistory', adminPaymentHistory);

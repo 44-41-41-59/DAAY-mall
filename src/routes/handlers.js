@@ -3,7 +3,7 @@
 const stripe = require('stripe')(process.env.SECERTSTRIPEKEY);
 
 const viewedModel = require('../DB/viewed/viewed-model');
-const payments = require('../DB/orderspayment/orderspayments-collection');
+const payments = require('../DB/adminPaymentHistory/admin-payment-history.model');
 const {order, payment, cart, review, product, store, wishlist} = require('../DB/collection-model'); //payment history //order
 
 
@@ -272,7 +272,26 @@ async function addProductsToWishlist(req, res, next) {
     next(e.message);
   }
 }
+function addComplaint(req, res, next){
+  let returnedProduct = req.body.productID;
+  let complaintOrder = req.body.orderID;
+  let invalid = [];
+
+  payments.read({ orders:  complaintOrder}).then(data=>{
+    data[0].orders.forEach(item=> {
+      if(item == complaintOrder){
+        invalid.push(item);
+      }
+    });
+    let record = {
+      invalid: invalid,
+    };
+    payments.update(data[0]._id._id, record);
+  }).then(result=> {
+    res.json({adminPaymentHistory:result});
+  } );
+}
 
 module.exports = {
-  getStoreProducts, getReviews, addReview, getOwnerAllStores, getPendingStores, getAllOrders, addProductsToWishlist,updateHandler, addHandler, getHandler, getProductsById, getFavorite, pay, getByUserHandler, getByIdHandler, deleteHandler, deleteByIdHandler,
+  getStoreProducts, getReviews, addReview, getOwnerAllStores, getPendingStores, getAllOrders, addProductsToWishlist,updateHandler, addHandler, getHandler, getProductsById, getFavorite, pay, getByUserHandler, getByIdHandler, deleteHandler, deleteByIdHandler,addComplaint,
 };
