@@ -1,10 +1,10 @@
 'use strict';
 
-const orderModel = require('../../../DB/store/orders/orders.model.js');
+const {order} = require('../../../DB/collection-models');
 
 function addOrder(req, res, next){
   try{
-    orderModel.create(req.body).then(data=> {
+    order.create(req.body).then(data=> {
       res.json(data);
     })
       .catch(next);
@@ -15,7 +15,7 @@ function addOrder(req, res, next){
 }
 function editOrder(req, res, next){
   try{
-    orderModel.update(req.params.id, req.body).then(data=> res.json(data))
+    order.update(req.params.id, req.body).then(data=> res.json(data))
       .catch(next); 
 
   } catch (e){
@@ -24,7 +24,7 @@ function editOrder(req, res, next){
 }
 function getAllOrders(req, res, next){
   try{
-    orderModel.read().then(data=> res.json({count:data.length,results:data}))
+    order.read().then(data=> res.json({count:data.length,results:data}))
       .catch(next); 
 
   } catch (e){
@@ -33,7 +33,7 @@ function getAllOrders(req, res, next){
 }
 function getOneOrder(req, res, next){
   try{
-    orderModel.read({_id:req.params.id}).then(data=> res.json(data))
+    order.read({_id:req.params.id}).then(data=> res.json(data))
       .catch(next); 
 
   } catch (e){
@@ -43,7 +43,7 @@ function getOneOrder(req, res, next){
 
 function deleteOrder(req, res, next){
   try{
-    orderModel.delete({_id:req.params.id}).then(data=> res.json(data))
+    order.delete({_id:req.params.id}).then(data=> res.json(data))
       .catch(next); 
 
   } catch (e){

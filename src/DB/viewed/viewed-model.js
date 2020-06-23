@@ -1,6 +1,6 @@
 'use strict';
 
-const viewedtSchema=require('./viwed-schema');
+const viewedtSchema=require('./viewed-schema');
 
 class viewedModel {
   constructor(schema){

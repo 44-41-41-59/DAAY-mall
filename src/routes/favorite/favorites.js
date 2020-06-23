@@ -1,8 +1,6 @@
 'use strict';
 
-const favoriteModel = require('../../DB/favorite/favorite.model');
-const storeModel= require('../../DB/store/store.model');
-const userModel = require('../../DB/users/user-model');
+const {favorite,store} = require('../../DB/collection-models');
 
 function getFavorite(req, res, next){
   let key, favoriteType;
@@ -10,22 +8,21 @@ function getFavorite(req, res, next){
     key = 'storeID';
     favoriteType = req.query.storeID;
   }
-  storeModel.read({[key]:favoriteType}).then((data) => res.json({ count: data.length, results: data }))
+  store.read({[key]:favoriteType}).then((data) => res.json({ count: data.length, results: data }))
     .catch(next);
 }
 
 
 function getOneFavorite(req, res, next){
-  favoriteModel.read({_id:req.params.id}).then((data) => res.json({ count: data.length, results: data }))
+  favorite.read({_id:req.params.id}).then((data) => res.json({ count: data.length, results: data }))
     .catch(next);
 }
 
 function addFavorite(req, res, next){
   let storeID = req.body.storeID;
-  storeModel.read({_id:storeID}).then((data) =>{
+  store.read({_id:storeID}).then((data) =>{
     data.userID = req.body.userID;
-    console.log('DATAAAAAAAAAA',data);
-    return favoriteModel.create(data);
+    return favorite.create(data);
   }).then((result)=>{
     res.json({favoriteModel: result}) ; 
   }) 
@@ -34,7 +31,7 @@ function addFavorite(req, res, next){
 
 function deleteFavorite (req, res , next){
   let id = req.params.id;
-  favoriteModel.delete(id)
+  favorite.delete(id)
     .then(record=>{
       res.json(record);
     }).catch(next);

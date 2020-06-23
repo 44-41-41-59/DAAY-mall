@@ -1,8 +1,8 @@
 'use strict';
 const express = require('express');
 const router = express.Router();
-const bearer = require('../../middlewares/auth/bearer.js');
-const permissions = require('../../middlewares/auth/authorize.js');
+const bearer = require('../../middlewares/auth/bearer');
+const permissions = require('../../middlewares/auth/authorize');
 const { addStore, editStore, deleteStore, getAllStores, getOneStore, getOwnerAllStores, getPendingStores} = require('./store.js');
 
 // create new store by USER/ get all stores by USER

@@ -1,22 +1,22 @@
 'use strict';
 
-const cartModel = require('../../DB/cart/cart.model');
+const {cart} = require('../../DB/collection-models');
 
 function getCart(req, res, next) {
-  cartModel.read(req.qurey).then((data) => res.json(data));
+  cart.read(req.qurey).then((data) => res.json(data));
   // let key, cartType;
   // if (req.query.productID) {
   //   key = 'productID';
   //   cartType = req.query.productID;
   // }
-  // cartModel
+  // cart
   //   .read({ [key]: cartType })
   //   .then((data) => res.json({ count: data.length, results: data }))
   //   .catch(next);
 }
 
 function getOneCart(req, res, next) {
-  cartModel
+  cart
     .read({ _id: req.params.id })
     .then((data) => res.json({ count: data.length, results: data }))
     .catch(next);
@@ -26,7 +26,7 @@ function addCart(req, res, next) {
   // if ( req.query.productID){
   //   req.body.productID = req.query.productID;
   // }
-  cartModel
+  cart
     .create(req.body)
     .then((results) => {
       res.json(results);
@@ -37,7 +37,7 @@ function addCart(req, res, next) {
 function deleteCart(req, res, next) {
   let userID = req.params.id;
   console.log(userID);
-  cartModel
+  cart
     .delete({ userID })
     .then((record) => {
       res.json(record);

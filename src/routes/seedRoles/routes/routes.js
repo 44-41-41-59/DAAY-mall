@@ -1,7 +1,7 @@
 'use strict';
 const express = require('express');
 const router = express.Router();
-const Roles = require('../../../DB/subdocuments/roles.js');
+const Roles = require('../../../DB/schemas/roles');
 
 router.route('/post/roles').post(async (req, res, next) => {
   try {
