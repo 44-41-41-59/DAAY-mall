@@ -4,18 +4,11 @@ const bearer = require('../middlewares/auth/bearer');
 const permissions = require('../middlewares/auth/authorize');
 const getModel = require('../middlewares/model-finder');
 
-const {
-  getFavorite,  
-  pay, getProductsById, 
-  getStoreProducts, getReviews, addReview, getOwnerAllStores, getPendingStores,
+const { getFavorite, pay, getProductsById, getStoreProducts, getReviews, addReview, getOwnerAllStores, getPendingStores,
   getAllOrders, addProductsToWishlist, deleteHandler,getByIdHandler,deleteByIdHandler,getByUserHandler,getHandler,addHandler, updateHandler,
 } = require('./handlers.js');
 
-router.param('model', getModel);
-router.route('/:model').get(getHandler);
-router.route('/:model/:userID').get(getByUserHandler).delete(deleteHandler);
-router.route('/:model/:model/:id').get(getByIdHandler).put(updateHandler).delete(deleteByIdHandler);
-router.route('/:model').post(addHandler);
+
 router.route('/favorite').get(bearer('registered'), getFavorite);
 router.route('/charge').post(pay);
 // router.route('/products/:id').get(bearer('none'),getProductsById);
@@ -25,6 +18,13 @@ router.route('/review').get(getReviews).post(addReview); //with query
 router.route('/order/store/:storeID').get(getAllOrders);
 router.route('/store/admin/dashboard').get(bearer, permissions('readPendingStores'),getPendingStores);
 router.post('/wishlist',addProductsToWishlist); // pass the userID in the token
+
+router.param('model', getModel);
+router.route('/:model').get(getHandler);
+router.route('/:model/:userID').get(getByUserHandler).delete(deleteHandler);
+router.route('/:model/:model/:id').get(getByIdHandler).put(updateHandler).delete(deleteByIdHandler);
+router.route('/:model').post(addHandler);
+
 
 module.exports=router;
 

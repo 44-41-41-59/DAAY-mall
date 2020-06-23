@@ -3,8 +3,8 @@ const { Schema, model } = require('mongoose');
 const jwt = require('jsonwebtoken'); 
 
 const users = require('../users/user-schema');
-const stores = require('../store/store-schema');
-const products = require('../product/product-schema');
+const stores = require('./store-schema');
+const products = require('./product-schema');
 
 
 const user = ['read','comment','rate'];
