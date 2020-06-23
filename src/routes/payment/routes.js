@@ -5,47 +5,49 @@ const router = express.Router();
 const stripe = require('stripe')(process.env.SECERTSTRIPEKEY);
 const cart = require('../../DB/cart/cart.model.js');
 const payments = require('../../DB/orderspayment/orderspayments-collection.js');
-const order = require('../../DB/users/payment-history/payment-history.model.js');
-const pay2 = require('../../DB/store/orders/orders.model.js');
+const payementHistory = require('../../DB/users/payment-history/payment-history.model.js');
+const order = require('../../DB/store/orders/orders.model.js');
 // const stripe = require('stripe')(process.env.SECERTSTRIPEKEY);
 
 
 router.route('/charge').post(pay);
 
 async function pay(req, res, next) {
-  let obj = {};
-  let arr = [];
-  let amount = 0;
-  let historyID;
-  let x = await cart.test(req.body.userID);
-  x.forEach((element) => {
-    arr.push(element.products._id);
+  // for later bring user id from token
+  let obj = {}; 
+  let storeProductIDs = [];
+  let amount = 0; // it should be called amount for stripe DONT change it 
+  let cartArr = await cart.test(req.body.userID); // array of object(cart based on user populated with products)
+  cartArr.forEach((element) => {
+    storeProductIDs.push(element.products._id);
     amount += element.products.price;
     if (obj[element.products.storeID])
       obj[element.products.storeID].push(element.products._id);
-    else obj[element.products.storeID] = [element.products._id];
+    else obj[element.products.storeID] = [element.products._id]; // create array for the store to store the product ids
   });
-  let y = await order.create({
+  let savedPayment= await payementHistory.create({
     userID: req.body.userID,
-    productID: arr,
+    productID: storeProductIDs,
     cost: amount,
   });
-  let b = [];
+  let ordersIDs = [];
   for (let key in obj) {
-    let z = await pay2.create({
+    let savedOrder = await order.create({
       storeID: key,
       products: obj[key],
       userID: req.body.userID,
     });
-    b.push(z._id);
+    ordersIDs.push(savedOrder._id);
   }
   await payments.create({
-    paymentsHistory: y._id,
+    paymentsHistory: savedPayment._id,
     userID: req.body.userID,
-    orders: b,
+    orders: ordersIDs,
   });
-  console.log(obj);
-  res.json(x);
+  res.json(cartArr);
+
+  // DONT DELETE Comment-----------------------------------------
+
   // stripe.customers
   // .create({
   //   email: req.body.stripeEmail,

@@ -7,8 +7,8 @@ class wishlistModel {
     this.schema=schema;
   }
 
-  read(userID){
-    return this.schema.find({userID}).populate('productID');
+  read(obj){
+    return this.schema.find(obj).populate('productID');
   }
 
   create(record) {

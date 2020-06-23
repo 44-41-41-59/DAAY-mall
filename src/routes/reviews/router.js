@@ -8,7 +8,7 @@ const {getReviews, getOneReview, addReview, editReview, deleteReview} = require(
 router.route('/review').get(getReviews).post(addReview);
 // get one review on a specific product or store / edit one review on a product or store/ delete one review on a product or a store
 router.route('/review/:id').get(getOneReview).put(editReview).delete(deleteReview);
-
-
+// all review on one product
+// all reviews on one store
 
 module.exports = router;
