@@ -15,36 +15,75 @@ const order = require('../DB/store/orders/orders.model.js');
 
 
 // function that gets wishlist, cart and payment history by passing user id as a param
-function getHandler(req, res, next) {
-  req.model.read().then((data) => res.json({ results: data }))
-    .catch(next);
+
+// async function updateHandler(req, res, next) {
+//   try {
+//     let id = req.params.id;
+//     const data = await req.model.update(id, req.body);
+//     res.json(data);
+//   } catch (e) {
+//     next(e.message);
+//   }
+// }
+
+async function getHandler(req, res, next) {
+  try{
+    const data = await req.model.read();
+    res.json({ results: data });
+  }
+  catch (e) {
+    next(e.message);
+  }
 }
 
-function getByUserHandler(req, res, next) {
-  req.model.read({ userID: req.params.userID }).then((data) => res.json({ results: data[0] }))
-    .catch(next);
+async function getByUserHandler(req, res, next) {
+  try{
+    const data = await req.model.read({ userID: req.params.userID });
+    res.json({ results: data[0] });
+  }
+  catch (e) {
+    next(e.message);
+  }
 }
 
 // get one paymenthistory, cart, review, order, store
-function getByIdHandler(req, res, next) {
-  req.model.read({ _id: req.params.id }).then((data) => res.json({ count: data.length, results: data }))
-    .catch(next);
+async function getByIdHandler(req, res, next) {
+  try{
+    const data = await req.model.read({ _id: req.params.id });
+    res.json({ count: data.length, results: data });
+  }
+  catch(e){
+    next(e.message);
+  }
 }
-function deleteHandler(req, res, next) {
-  req.model.delete({ userID: req.params.userID }).then((record) => res.json(record))
-    .catch(next);
+async function deleteHandler(req, res, next) {
+  try{
+    const data = await  req.model.delete({ userID: req.params.userID });
+    res.json(data);
+  }
+  catch(e){
+    next(e.message);
+  }
 }
 
-function deleteByIdHandler(req, res, next) {
-  req.model.delete(req.params.id).then((record) => res.json(record))
-    .catch(next);
+async function deleteByIdHandler(req, res, next) {
+  try{
+    const data = await req.model.delete(req.params.id);
+    res.json(data);
+  }
+  catch(e){
+    next(e.message);
+  }
 }
 
-function addHandler(req, res, next) {
-  req.model.create(req.body).then((results) => {
-    res.json(results);
-  })
-    .catch(next);
+async function addHandler(req, res, next) {
+  try{
+    const data = await req.model.create(req.body);
+    res.json(data);
+  }
+  catch(e){
+    next(e.message);
+  }
 }
 
 async function updateHandler(req, res, next) {
@@ -59,14 +98,19 @@ async function updateHandler(req, res, next) {
 
 //-----------------------------------------------------------------------------
 
-function getFavorite(req, res, next) {
-  let key, favoriteType;
-  if (req.query.storeID) {
-    key = 'storeID';
-    favoriteType = req.query.storeID;
+async function getFavorite(req, res, next) {
+  try {
+    let key, favoriteType;
+    if (req.query.storeID) {
+      key = 'storeID';
+      favoriteType = req.query.storeID;
+    }
+    const data = await storeModel.read({ [key]: favoriteType });
+    res.json({ count: data.length, results: data });
   }
-  storeModel.read({ [key]: favoriteType }).then((data) => res.json({ count: data.length, results: data }))
-    .catch(next);
+  catch (e) {
+    next(e.message);
+  }
 }
 
 async function pay(req, res, next) {
@@ -75,7 +119,6 @@ async function pay(req, res, next) {
   let storeProductIDs = [];
   let amount = 0; // it should be called amount for stripe DONT change it 
   let cartArr = await cart.test(req.body.userID); // array of object(cart based on user populated with products)
-  console.log('anolla', cartArr);
   cartArr.forEach((element) => {
     storeProductIDs.push(element.products._id);
     amount += element.products.price;
@@ -129,21 +172,28 @@ async function pay(req, res, next) {
 
 // get one product by id by USER/OWNER
 async function getProductsById(req, res, next) {
-  let products = await productsModel.read({ _id: req.params.id });
-  let result = {
-    count: products.length,
-    results: products,
-  };
-  if (req.user) {
-    if (req.user.id) {
-      products.userID = req.user.id;
-      let viewed = await viewedModel.create(products);
-      res.json(viewed);
+  try{
+    let products = await productsModel.read({ _id: req.params.id });
+    let result = {
+      count: products.length,
+      results: products,
+    };
+    if (req.user) {
+      if (req.user.id) {
+        products.userID = req.user.id;
+        let viewed = await viewedModel.create(products);
+        res.json(viewed);
+      }
     }
+    else {
+      res.json(result);
+    }
+
   }
-  else {
-    res.json(result);
+  catch (e) {
+    next(e.message);
   }
+
 }
 
 // get all products for each store by store id by OWNER/USER
