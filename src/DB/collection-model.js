@@ -1,13 +1,13 @@
 'use strict';
 
-const favoriteSchema = require('./favorite/favorite-schema');
-const cartSchema = require('./cart/cart-schema');
-const productSchema=require('./product/product-schema');
-const reviewsSchema = require('./review/reviews-schema');
-const storeSchema = require('./store/store-schema');
-const orderSchema  = require('./store/orders/ordering-schema');
-const paymentHistorySchema = require('./users/payment-history/payment-history.schema');
-const wishlistSchema = require('./whishlist/wishlist-schema');
+const favoriteSchema = require('./schemas/favorite-schema');
+const cartSchema = require('./schemas/cart-schema');
+const productSchema=require('./schemas/product-schema');
+const reviewsSchema = require('./schemas/reviews-schema');
+const storeSchema = require('./schemas/store-schema');
+const orderSchema  = require('./schemas/ordering-schema');
+const paymentHistorySchema = require('./schemas/payment-history.schema');
+const wishlistSchema = require('./schemas/wishlist-schema');
 
 class Model {
   constructor(schema) {

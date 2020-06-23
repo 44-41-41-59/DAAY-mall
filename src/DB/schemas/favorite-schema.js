@@ -1,6 +1,6 @@
 'use strict';
 const { Schema, model } = require('mongoose');
-const story = require('../store/store-schema.js');
+const story = require('./store-schema.js');
 
 const FavoriteStore = new Schema({
   userID: { type: Schema.Types.ObjectId },
