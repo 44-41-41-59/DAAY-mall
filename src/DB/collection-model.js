@@ -19,8 +19,7 @@ class Model {
   }
 
   create(record) {
-    console.log(record,'**************');
-    
+   
     let newRecord = new this.schema(record);
     return newRecord.save();
   }
@@ -31,6 +30,9 @@ class Model {
 
   delete(_id) {
     return this.schema.findByIdAndDelete(_id);
+  }
+  deleteByUserID(obj) {
+    return this.schema.deleteMany(obj);
   }
 }
 

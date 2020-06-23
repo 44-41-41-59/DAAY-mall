@@ -1,22 +1,27 @@
 'use strict';
 const user = require('../../DB/users/user-schema.js');
 const { compare } = require('bcryptjs');
+
 module.exports=(type)=>{
   return async (req, res, next) => {
-    console.log('----------------------------D', req.params.model);
+    if(req.params.model === 'cart') type = 'registered';
+    if (req.params.model === 'wishlist') type = 'registered';
+    if (req.params.model === 'favorite') type = 'registered';
+    if (req.params.model === 'payment') type = 'registered';
+    if (req.params.model === 'review') type = 'registered';
+    if (req.params.model === 'order') type = 'registered';
+    
     if(type==='none'){
       if(req.headers.authorization){
         const [auth, token] = req.headers.authorization.split(' ');
         if (auth === 'Bearer') {
           let record = await user.authenticateToken(token);
-          // console.log('record in bearer', record.populate('acl').exec(), 'request', req.body);
           req.user = {
             username: record.username,
             acl: record.acl,
             capabilities: record.acl.capabilities,
             id:record.id,
           };
-          console.log(req.user,'******************');
           next();
         }
         else{
@@ -35,14 +40,12 @@ module.exports=(type)=>{
           const [auth, token] = req.headers.authorization.split(' ');
           if (auth === 'Bearer') {
             let record = await user.authenticateToken(token);
-            // console.log('record in bearer', record.populate('acl').exec(), 'request', req.body);
             req.user = {
               username: record.username,
               acl: record.acl,
               capabilities: record.acl.capabilities,
               id:record.id,
             };
-            console.log(req.user,'******************');
           } else {
             next({ status: 401, message: 'Invalid auth header' });
           }

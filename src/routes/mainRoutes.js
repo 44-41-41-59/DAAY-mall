@@ -5,7 +5,7 @@ const permissions = require('../middlewares/auth/authorize');
 const getModel = require('../middlewares/model-finder');
 
 const { getFavorite, pay, getProductsById, getStoreProducts, getReviews, addReview, getOwnerAllStores, getPendingStores,
-  getAllOrders, addProductsToWishlist, deleteHandler,getByIdHandler,deleteByIdHandler,getByUserHandler,getHandler,addHandler, updateHandler, addComplaint,
+  getAllOrders, addProductsToWishlist, deleteByUserIdHandler,getByIdHandler,deleteByIdHandler,getByUserHandler,getHandler,addHandler, updateHandler, addComplaint,
 } = require('./handlers.js');
 
 
@@ -22,9 +22,11 @@ router.route('/wishlist').post(addProductsToWishlist); // pass the userID in the
 router.route('/complaint').patch(addComplaint); 
 
 router.param('model', getModel);
-router.route('/:model').get(getHandler);
-router.route('/:model/:userID').get(getByUserHandler).delete(deleteHandler);
-router.route('/:model/:model/:id').get(getByIdHandler).put(updateHandler).delete(deleteByIdHandler);
+
+router.route('/:model').get(bearer('none'), getHandler);
+router.route('/:model/user').get(bearer('none'),getByUserHandler).delete(bearer('none'),deleteByUserIdHandler);
+
+router.route('/:model/id/:id').get(bearer('none'), getByIdHandler).put(bearer('none'), getByIdHandler, updateHandler).delete(bearer('none'), getByIdHandler, deleteByIdHandler);
 router.route('/:model').post(addHandler);
 
 

@@ -19,8 +19,8 @@ async function getHandler(req, res, next) {
 
 async function getByUserHandler(req, res, next) {
   try{
-    const data = await req.model.read({ userID: req.params.userID });
-    res.json({ results: data[0] });
+    const data = await req.model.read({ userID: req.user.id });
+    res.json({ results: (data[0])?(data[0]):'Empty' });
   }
   catch (e) {
     next(e.message);
@@ -37,9 +37,9 @@ async function getByIdHandler(req, res, next) {
     next(e.message);
   }
 }
-async function deleteHandler(req, res, next) {
+async function deleteByUserIdHandler(req, res, next) {
   try{
-    const data = await  req.model.delete({ userID: req.params.userID });
+    const data = await  req.model.deleteByUserID({ userID: req.user.id });
     res.json(data);
   }
   catch(e){
@@ -293,5 +293,5 @@ function addComplaint(req, res, next){
 }
 
 module.exports = {
-  getStoreProducts, getReviews, addReview, getOwnerAllStores, getPendingStores, getAllOrders, addProductsToWishlist,updateHandler, addHandler, getHandler, getProductsById, getFavorite, pay, getByUserHandler, getByIdHandler, deleteHandler, deleteByIdHandler,addComplaint,
+  getStoreProducts, getReviews, addReview, getOwnerAllStores, getPendingStores, getAllOrders, addProductsToWishlist,updateHandler, addHandler, getHandler, getProductsById, getFavorite, pay, getByUserHandler, getByIdHandler, deleteByUserIdHandler, deleteByIdHandler,addComplaint,
 };
