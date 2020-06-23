@@ -5,30 +5,47 @@ const permissions = require('../middlewares/auth/authorize');
 const getModel = require('../middlewares/model-finder');
 
 const {
-  getFavorite,  
-  pay, getProductsById, 
-  getStoreProducts, getReviews, addReview, getOwnerAllStores, getPendingStores,
-  getAllOrders, addProductsToWishlist, deleteHandler,getByIdHandler,deleteByIdHandler,getByUserHandler,getHandler,addHandler, updateHandler,
+  getFavorite,
+  pay,
+  getProductsById,
+  getStoreProducts,
+  getReviews,
+  addReview,
+  getOwnerAllStores,
+  getPendingStores,
+  getAllOrders,
+  addProductsToWishlist,
+  deleteHandler,
+  getByIdHandler,
+  deleteByIdHandler,
+  getByUserHandler,
+  getHandler,
+  addHandler,
+  updateHandler,
 } = require('./handlers.js');
 
 router.param('model', getModel);
 router.route('/:model').get(getHandler);
 router.route('/:model/:userID').get(getByUserHandler).delete(deleteHandler);
-router.route('/:model/:model/:id').get(getByIdHandler).put(updateHandler).delete(deleteByIdHandler);
+router
+  .route('/:model/id/:id')
+  .get(getByIdHandler)
+  .put(updateHandler)
+  .delete(deleteByIdHandler);
 router.route('/:model').post(addHandler);
 router.route('/favorite').get(bearer('registered'), getFavorite);
 router.route('/charge').post(pay);
 // router.route('/products/:id').get(bearer('none'),getProductsById);
 router.route('/products/store/:store_id').get(getStoreProducts);
-router.route('/store/store/:owner_id').get(getOwnerAllStores);
 router.route('/review').get(getReviews).post(addReview); //with query
+router.route('/store/store/:owner_id').get(getOwnerAllStores);
 router.route('/order/store/:storeID').get(getAllOrders);
-router.route('/store/admin/dashboard').get(bearer, permissions('readPendingStores'),getPendingStores);
-router.post('/wishlist',addProductsToWishlist); // pass the userID in the token
+router
+  .route('/store/admin/dashboard')
+  .get(bearer, permissions('readPendingStores'), getPendingStores);
+router.post('/wishlist', addProductsToWishlist); // pass the userID in the token
 
-module.exports=router;
-
-
+module.exports = router;
 
 // create payment history and send all orders for each store
 // router.route('/charge').post(pay);
@@ -44,16 +61,14 @@ module.exports=router;
 // get all carts for one user // add an item(product) to the cart
 // router.route('/cart/:userID').get(getCart);
 // router.route('/cart').post(addCart);s
-// get one item from one cart (shows the amount for the product) // patch(edit amount of the product) // delete 
+// get one item from one cart (shows the amount for the product) // patch(edit amount of the product) // delete
 // router.route('/cart/:id').get(getOneCart).patch(editCart).delete(deleteCart);
-
 
 // get payment history for one user
 // router.route('/payment/history/all/:user_id').get(getPaymentHistory);
 // get or delete one item form the payment history
 // router.route('/payment/history/:id').get(getOnePaymentHistory);
 // router.route('/payment/history/:id').delete(deletePaymentHistory);
-
 
 // get all products from all stores by USER
 // router.route('/products').get(getProducts);
@@ -87,16 +102,13 @@ module.exports=router;
 // router.route('/store/admin/dashboard').get(bearer, permissions('readPendingStores'),getPendingStores);
 // get all the stores owned by one owner by USER
 // router.route('/store/:owner_id').get(getOwnerAllStores);
-// get one store by store ID by USER/  edit one store by OWNER / edit one store status by ADMIN / delete one store by OWNER and ADMIN 
+// get one store by store ID by USER/  edit one store by OWNER / edit one store status by ADMIN / delete one store by OWNER and ADMIN
 // router.route('/store/:store_id').get(getOneStore);
 // router.route('/store/:store_id').put(bearer, permissions('update'), editStore).patch(bearer, permissions('updateStoreStatus'), editStore);
 // .delete(bearer, permissions('delete'), deleteStore);
 
-// get wish-list 
+// get wish-list
 // router.get('/wishlist/:userID',getWishlist);
 // router.post('/wishlist',addProductsToWishlist); // pass the userID in the token
 // router.put('/wishlist/user/:id',updateWishlist);
 // router.delete('/wishlist/user/:id',deleteFromWishlist);
-
-
-
