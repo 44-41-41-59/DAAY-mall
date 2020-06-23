@@ -8,10 +8,7 @@ const { getFavorite, pay, getProductsById, getStoreProducts, getReviews, addRevi
   getAllOrders, addProductsToWishlist, deleteHandler,getByIdHandler,deleteByIdHandler,getByUserHandler,getHandler,addHandler, updateHandler,
 } = require('./handlers.js');
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 3c0f25f27184cd48ce39a9101d293fa68453e49e
 router.route('/favorite').get(bearer('registered'), getFavorite);
 router.route('/charge').post(pay);
 // router.route('/products/:id').get(bearer('none'),getProductsById);
@@ -28,10 +25,7 @@ router.route('/:model/:userID').get(getByUserHandler).delete(deleteHandler);
 router.route('/:model/:model/:id').get(getByIdHandler).put(updateHandler).delete(deleteByIdHandler);
 router.route('/:model').post(addHandler);
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 3c0f25f27184cd48ce39a9101d293fa68453e49e
 module.exports=router;
 
 
