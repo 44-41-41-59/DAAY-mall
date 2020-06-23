@@ -2,11 +2,6 @@
 const { Schema, model } = require('mongoose');
 const jwt = require('jsonwebtoken'); 
 
-const users = require('../users/user-schema');
-const stores = require('./store-schema');
-const products = require('./product-schema');
-
-
 const user = ['read','comment','rate'];
 const admin = ['read'];
 const owner = ['read'];

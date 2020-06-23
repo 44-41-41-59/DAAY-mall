@@ -28,6 +28,7 @@ const store = new mongoose.Schema(
     ownerID: { type: String, required: true },
   },
   { toJSON: { virtuals: true }, toObject: { virtuals: true } },
+  { timestamps: { createdAt: 'created_at' }},
 );
 
 // reviews virtuals to get reviews from reviews collection

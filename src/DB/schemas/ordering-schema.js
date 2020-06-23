@@ -11,6 +11,7 @@ const ordering = Schema({
     required: true,
   },
   storeID: { type: Schema.Types.ObjectId },
-});
+},
+{ timestamps: { createdAt: 'created_at' }});
 
 module.exports = model('order', ordering);

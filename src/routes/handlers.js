@@ -95,59 +95,64 @@ async function getFavorite(req, res, next) {
 }
 
 async function pay(req, res, next) {
-  // for later bring user id from token
-  let obj = {};
-  let storeProductIDs = [];
-  let amount = 0; // it should be called amount for stripe DONT change it 
-  let cartArr = await cart.test(req.body.userID); // array of object(cart based on user populated with products)
-  cartArr.forEach((element) => {
-    storeProductIDs.push(element.products._id);
-    amount += element.products.price;
-    if (obj[element.products.storeID])
-      obj[element.products.storeID].push(element.products._id);
-    else obj[element.products.storeID] = [element.products._id]; // create array for the store to store the product ids
-  });
-  let savedPayment = await payment.create({ //payment history for USER
-    userID: req.body.userID,
-    productID: storeProductIDs,
-    cost: amount,
-  });
-  let ordersIDs = [];
-  for (let key in obj) {
-    let savedOrder = await order.create({
-      storeID: key,
-      products: obj[key],
-      userID: req.body.userID,
+  try{
+    // for later bring user id from token
+    let obj = {};
+    let storeProductIDs = [];
+    let amount = 0; // it should be called amount for stripe DONT change it 
+    let cartArr = await cart.test(req.body.userID); // array of object(cart based on user populated with products)
+    cartArr.forEach((element) => {
+      storeProductIDs.push(element.products._id);
+      amount += element.products.price;
+      if (obj[element.products.storeID])
+        obj[element.products.storeID].push(element.products._id);
+      else obj[element.products.storeID] = [element.products._id]; // create array for the store to store the product ids
     });
-    ordersIDs.push(savedOrder._id);
+    let savedPayment = await payment.create({ //payment history for USER
+      userID: req.body.userID,
+      productID: storeProductIDs,
+      cost: amount,
+    });
+    let ordersIDs = [];
+    for (let key in obj) {
+      let savedOrder = await order.create({
+        storeID: key,
+        products: obj[key],
+        userID: req.body.userID,
+      });
+      ordersIDs.push(savedOrder._id);
+    }
+    await payments.create({ //payment history for ADMIN
+      paymentsHistory: savedPayment._id,
+      userID: req.body.userID,
+      orders: ordersIDs,
+    });
+    res.json(cartArr);
+  
+    // DONT DELETE Comment-----------------------------------------
+  
+    // stripe.customers
+    // .create({
+    //   email: req.body.stripeEmail,
+    //   source: req.body.stripeToken,
+    // })
+    // .then((customer) => {
+    //   stripe.charges.create({
+    //     amount,
+    //     description: 'DAAY-mall check',
+    //     currency: 'usd',
+    //     customer: customer.id,
+    //   });
+    // })
+    // .then((charge) => {
+  
+    //   res.send('done');
+    // })
+    // .catch((e) => next({ status: 500, message: e.message }));
   }
-  await payments.create({ //payment history for ADMIN
-    paymentsHistory: savedPayment._id,
-    userID: req.body.userID,
-    orders: ordersIDs,
-  });
-  res.json(cartArr);
-
-  // DONT DELETE Comment-----------------------------------------
-
-  // stripe.customers
-  // .create({
-  //   email: req.body.stripeEmail,
-  //   source: req.body.stripeToken,
-  // })
-  // .then((customer) => {
-  //   stripe.charges.create({
-  //     amount,
-  //     description: 'DAAY-mall check',
-  //     currency: 'usd',
-  //     customer: customer.id,
-  //   });
-  // })
-  // .then((charge) => {
-
-  //   res.send('done');
-  // })
-  // .catch((e) => next({ status: 500, message: e.message }));
+  catch (e) {
+    next(e.message);
+  }
 }
 
 
@@ -178,56 +183,81 @@ async function getProductsById(req, res, next) {
 
 // get all products for each store by store id by OWNER/USER
 async function getStoreProducts(req, res, next) {
-  let storeProducts = await product.read({ storeID: req.params.store_id });
-  let results = {
-    count: storeProducts.length,
-    results: storeProducts,
-  };
-  res.json(results);
+  try{
+    let storeProducts = await product.read({ storeID: req.params.store_id });
+    let results = {
+      count: storeProducts.length,
+      results: storeProducts,
+    };
+    res.json(results);
+  }
+  catch (e) {
+    next(e.message);
+  }
 }
 
 // get reviews for one product or one store
-function getReviews(req, res, next) {
-  let key, reviewType;
-  if (req.query.productID) {
-    key = 'productID';
-    reviewType = req.query.productID;
-  } else if (req.query.storeID) {
-    key = 'storeID';
-    reviewType = req.query.storeID;
+async function getReviews(req, res, next) {
+  try{
+    let key, reviewType;
+    if (req.query.productID) {
+      key = 'productID';
+      reviewType = req.query.productID;
+    } else if (req.query.storeID) {
+      key = 'storeID';
+      reviewType = req.query.storeID;
+    }
+
+    const data = await review.read({ [key]: reviewType });
+    res.json({ count: data.length, results: data });
   }
-  review.read({ [key]: reviewType }).then((data) => res.json({ count: data.length, results: data }))
-    .catch(next);
+  catch (e) {
+    next(e.message);
+  }
 }
 // add one review on a product or a store
-function addReview(req, res, next) {
-  if (req.query.productID) {
-    req.body = { productID: req.query.productID };
-  } else if (req.query.storeID) {
-    req.body.storeID = req.query.storeID; //not sure
+async function addReview(req, res, next) {
+  try{
+    if (req.query.productID) {
+      req.body = { productID: req.query.productID };
+    } else if (req.query.storeID) {
+      req.body.storeID = req.query.storeID; //not sure
+    }
+    const data = await review.create(req.body);
+    res.json(data);
   }
-  review.create(req.body)
-    .then(results => {
-      res.json(results);
-    }).catch(next);
+  catch (e) {
+    next(e.message);
+  }
 }
 // get all stores in the website
-function getOwnerAllStores(req, res, next) {
-  store.read({ ownerID: req.params.owner_id }).then((data) => res.json({ count: data.length, results: data }))
-    .catch(next);
+async function getOwnerAllStores(req, res, next) {
+  try{
+    const data = await store.read({ ownerID: req.params.owner_id });
+    res.json({ count: data.length, results: data });
+  }
+  catch (e) {
+    next(e.message);
+  }
 }
 
 // get all pending stores in the admin dashboard
-function getPendingStores(req, res, next) {
-  store.read({ status: 'pending' }).then(data => res.json(data))
-    .catch(next);
+async function getPendingStores(req, res, next) {
+  try{
+    console.log('**********************');
+    
+    const data = await store.read({ status: 'pending' });
+    res.json(data);
+  }
+  catch (e) {
+    next(e.message);
+  }
 }
 
-function getAllOrders(req, res, next) {
+async function getAllOrders(req, res, next) {
   try {
-    order.read({ storeID: req.params.storeID }).then(data => res.json({ count: data.length, results: data }))
-      .catch(next);
-
+    const data = await order.read({ storeID: req.params.storeID });
+    res.json({ count: data.length, results: data });
   } catch (e) {
     res.send(e.message);
   }

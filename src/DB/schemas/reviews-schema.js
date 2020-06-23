@@ -7,7 +7,8 @@ const Review = new Schema({
   rate: { type: Number, required: true, min: 0, max: 5 },
   storeID: { type: String },
   productID: { type: String },
-});
+},
+{ timestamps: { createdAt: 'created_at' }});
 
 
 module.exports = model('review', Review);

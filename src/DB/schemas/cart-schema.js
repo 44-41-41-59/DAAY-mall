@@ -6,7 +6,8 @@ const Cart = Schema({
   userID: { type: Schema.Types.ObjectId },
   products: { type: Schema.Types.ObjectId, ref: 'product' },
   quantity: { type: Number, default: 1 },
-});
+},
+{ timestamps: { createdAt: 'created_at' }});
 
 // Cart.virtual('carts', {
 //   ref: 'carts',
