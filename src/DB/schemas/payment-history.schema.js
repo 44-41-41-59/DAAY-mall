@@ -6,7 +6,8 @@ const paymentsHistory = Schema({
   userID: { type: Schema.Types.ObjectId },
   productID: [{ type: Schema.Types.ObjectId, ref: 'product' }],
   cost: { type: Number },
-});
+},
+{ timestamps: { createdAt: 'created_at' }} );
 
 // when the user buy a product, it will create an instance for the payment history with the product ID and using virtuals it will get the whole product from the product collection.
 // then we will populate every store ordering collection with the orders.
