@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "test": "jest --coverage --verbose",
+    "test": "jest --coverage --verbose --forceExit --maxWorkers=10",
     "lint": "eslint '**/*.js'",
     "doc": "jsdoc -c jsdoc.json"
   },
