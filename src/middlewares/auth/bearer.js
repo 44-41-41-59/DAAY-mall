@@ -2,6 +2,7 @@
 const user = require('../../DB/users/user-schema.js');
 module.exports=(type)=>{
   return async (req, res, next) => {
+    console.log('blaaablaaaa',req.params.model);
     if(type==='none'){
       if(req.headers.authorization){
         const [auth, token] = req.headers.authorization.split(' ');

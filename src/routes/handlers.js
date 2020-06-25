@@ -1,6 +1,6 @@
 'use strict';
 
-const stripe = require('stripe')(process.env.SECERTSTRIPEKEY);
+// const stripe = require('stripe')(process.env.SECERTSTRIPEKEY);
 
 const orderModel = require('../DB/store/orders/orders.model');
 const wishListModel = require('../DB/whishlist/whishlist-model');

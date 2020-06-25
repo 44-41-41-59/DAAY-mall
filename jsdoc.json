@@ -1,16 +1,17 @@
 {
-    "source": {
-      "include": ["./"],
+  "source": {
+      "include": ["./src"],
       "includePattern": ".js$",
-      "excludePattern": "(node_modules/|docs)"
-    },
-    "plugins": ["plugins/markdown"],
-    "templates": {
-      "cleverLinks": true,
-      "monospaceLinks": true
-    },
-    "opts": {
+      "excludePattern": "(node_modules/|./doc)"
+  },
+  "plugins": [
+      "plugins/markdown"
+  ],
+  "opts": {
+      "encoding": "utf8",
+      "destination": "doc/",
       "recurse": true,
-      "destination": "./docs/"
-    }
+      "verbose": true,
+      "template":"default"
   }
+}
