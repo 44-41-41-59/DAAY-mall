@@ -10,7 +10,9 @@ const Product = new Schema({
   description: { type: String },
   category: { type: String },
   storeID: { type: String, required: true },
-});
+},
+{ timestamps: { createdAt: 'created_at' }});
+
 Product.virtual('reviews', {
   ref: 'review',
   localField: '_id',

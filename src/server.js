@@ -9,12 +9,11 @@ const seedRoles = require('./routes/seedRoles/routes/routes.js');
 
 const mainRouter = require('./routes/mainRoutes');
 
-
 const uuid = require('uuid').v4;
 
 const app = express();
 const server = require('http').Server(app);
-const io = require('socket.io')(server);
+const io = require('socket.io')(server); 
 
 app.use(express.json());
 app.use(morgan('dev'));
@@ -29,7 +28,6 @@ app.use('/seedroles', seedRoles);
 // mainRouter
 app.use(mainRouter);
 
-
 app.use('*', notFound);
 app.use(errorHandeler);
 
@@ -40,86 +38,66 @@ module.exports = {
     // app.listen(port, () => console.log(`Hearing from port -> ${port}`));
   },
 };
-let arr = [];
-let object = {};
-let id;
+let clientsQueue = [];
+let custmerRoom = {};
 io.on('connection', (socket) => {
+  socket.on('massege', (room, message, id) => {
+    console.log(room);
+    io.in(room).emit('masseage', { message, id });
+  });
+
   socket.on('error', (payload) => {
     console.log('error', payload);
   });
-  let room;
-  socket.on('admin', (name) => {
-    let room = uuid();
-    object[room] = true;
-    console.log(name);
+  socket.on('admin', (name, room) => {
+    custmerRoom[room] = { status: true, name };
     socket.join(room);
-    console.log(object);
+    console.log(custmerRoom);
+    setTimeout(() => {
+      loop();
+    }, 1000);
+  });
+  socket.on('next', (room) => {
+    if (custmerRoom[room]) custmerRoom[room].status = true;
+    setTimeout(() => {
+      loop();
+    }, 1000);
+  });
+  socket.on('admindisconecct', (room) => {
+    delete custmerRoom[room];
+    console.log(custmerRoom);
   });
   socket.on('userConnected', async (name) => {
-    arr.push(socket);
-    loop();
-    // let x = setInterval(() => {
-    // room = loop();
-    // console.log(userRoom, 'heeeeeellojkjjlkjlkjl');
-    // if (userRoom) clearInterval(x);
-    // }, 200);
-    // let x = await loop();
-    // userRoom = x;
-    // console.log('bobo', userRoom);
-    // console.log(name);
-    // socket.join(name);
+    clientsQueue.push(socket);
+
+    if (!loop()) socket.emit('wait', {});
   });
   socket.on('userDisconnected', (room) => {
-    socket.leave(room);
-    console.log(room, 'bsbsbs moew');
-    object[room] = true;
-    loop();
-    console.log(object);
+    socket.leave(room.room);
+    // if (custmerRoom[room.room]) custmerRoom[room.room].status = true;
+    // setTimeout(() => {
+    //   loop();
+    // }, 1000);
+    // console.log(room, 'bsbsbs moew');
+    io.in(room.room).emit('next', room.room);
+
+    console.log(custmerRoom);
   });
-  // socket.on('message', (msg) => console.log(msg));
 });
 
-// function loop() {
-//   let c2 = 0;
-//   let c = 0;
-//   console.log('loop', c++);
-//   let break2 = true;
-//   while (break2) {
-//     console.log('q', c2++);
-//     for (let room in object) {
-//       if (object[room]) {
-//         let socket = arr.shift();
-//         socket.join(room);
-//         object[room] = false;
-//         console.log('sreved', object);
-//         break2 = false;
-//         return room;
-//       }
-//     }
-//   }
 function loop() {
-  for (let room in object) {
-    if (object[room]) {
-      let socket = arr.shift();
-      socket.join(room);
-      socket.emit('joinded', room);
-      object[room] = false;
-      console.log('sreved', object);
-      // break2 = false;
-      return room;
+  if (clientsQueue.length) {
+    for (let room in custmerRoom) {
+      if (custmerRoom[room].status) {
+        let name = custmerRoom[room].name;
+        let socket = clientsQueue.shift();
+        socket.join(room);
+        socket.emit('joinded', { room, name });
+        custmerRoom[room].status = false;
+        console.log('sreved', custmerRoom);
+        return room;
+      }
     }
+    return false;
   }
-  // return false;
-  // setTimeout(() => loop(), 200);
 }
-// for (let room in object) {
-//   if (object[room]) {
-//     let socket = arr.shift();
-//     socket.join(room);
-//     object[room] = false;
-//     console.log('sreved', object);
-//     return object[room];
-//   }
-// }
-// setTimeout(() => loop(), 200);
-// }

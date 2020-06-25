@@ -1,8 +1,9 @@
 'use strict';
 const user = require('../../DB/users/user-schema.js');
+const { compare } = require('bcryptjs');
 module.exports=(type)=>{
   return async (req, res, next) => {
-    console.log('blaaablaaaa',req.params.model);
+    console.log('----------------------------D', req.params.model);
     if(type==='none'){
       if(req.headers.authorization){
         const [auth, token] = req.headers.authorization.split(' ');

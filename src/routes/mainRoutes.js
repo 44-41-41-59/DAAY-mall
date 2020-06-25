@@ -4,14 +4,14 @@ const bearer = require('../middlewares/auth/bearer');
 const permissions = require('../middlewares/auth/authorize');
 const getModel = require('../middlewares/model-finder');
 
-const {
-  getFavorite,  
-  pay, getProductsById, 
-  getStoreProducts, getReviews, addReview, getOwnerAllStores, getPendingStores,
-  getAllOrders, addProductsToWishlist, deleteHandler,getByIdHandler,deleteByIdHandler,getByUserHandler,getHandler,addHandler, updateHandler,
+const { getFavorite, pay, getProductsById, getStoreProducts, getReviews, addReview, getOwnerAllStores, getPendingStores,
+  getAllOrders, addProductsToWishlist, deleteHandler,getByIdHandler,deleteByIdHandler,getByUserHandler,getHandler,addHandler, updateHandler, addComplaint,
 } = require('./handlers.js');
 const { restoreDefaultPrompts } = require('inquirer');
 const { get } = require('./seedRoles/routes/routes');
+
+router.route('/complaint').patch(addComplaint);
+router.route('/charge').post(pay);
 
 router.param('model', getModel);
 router.route('/:model').get(getHandler);
@@ -19,60 +19,26 @@ router.route('/:model').get(getHandler);
 //(/cart,/wishlist,/viewed,/favorite)=>sign in user
 //(/auth=>user signin,/oauth=>user Signin/up with google,/productes,/store,/reviews)=>public user
 router.route('/:model/:userID').get(getByUserHandler).delete(deleteHandler);
-//(/product/:id)=>owner (GET,UPDATE,DELETE) (premssion:update+delete)
-//(/order/:id)=>owner (PUT,PATCH,DELETE) (premssion:update,update,delete=>Pass the store id in the body or bearer token)
-//('/review/:id)=>user/signed in (DELETE,PUT) (premssion:deleteReview,updateReview)
-//(/cart/:id)=> user signed in (delete) (premssion:Delete)
-//(/wishlist/:id)=> user signed in (post,delete) (premssion:create,delete)
-//(/viewed/:id)=>user signed in (delete) (premssion:delete)
-//(/store/:id)=>public user (READ) (premssion:read)
-
-router.route('/:model/:model/:id').get(getByIdHandler).put(updateHandler).delete(deleteByIdHandler);
-///(payment/history/:id) => user signed in (GET,DELETE) (premssion : readPayment,deletePayment)
-
-router.route('/:model').post(bearer('none'),addHandler);
-//(/store,//products)=>owner (POST) (premssion :create)
-//(/viewed)=>user signed in (POST) (premssion : create)
-//(/favorite)=>user signed in (POST) (premssion:create)
-//(/auth)=>public user (POST) (signup)
-//(/facebook)=>public user (POST)(Sign-in/up with facebook)
-
-//--------------------- which route-------------------------------
-// router.route('/payment/history/all/:user_id').get(pay);
-//(payment/history/all/:user_id)=> signed in (GET) (premssion : readPayment); =>Instead of params get user id from token
-// router.route('/payment/history').post(pay);
-//(/payment/history)=>user signed in (POST) (premssion:createPayment)=>Posted automatically on /charge route
-//--------------------- which route-------------------------------
-
+router
+  .route('/:model/id/:id')
+  .get(getByIdHandler)
+  .put(updateHandler)
+  .delete(deleteByIdHandler);
+router.route('/:model').post(addHandler);
 router.route('/favorite').get(bearer('registered'), getFavorite);
-
-router.route('/charge').post(pay);
-// ('/charge)=>user signed in (POST) (premission:checkOutCart)
 // router.route('/products/:id').get(bearer('none'),getProductsById);
 
 router.route('/products/store/:store_id').get(getStoreProducts);
-//(/products/:store_id)=>public user (READ) (premssion:read);
-
-router.route('/store/store/:owner_id').get(getOwnerAllStores);// why 2x store ?!
-// (/store/:owner_id) =>owner (GET) (Instead of params get the owner id from token)
-
-
 router.route('/review').get(getReviews).post(addReview); //with query
-//(/review)=>user /signed in (POST) (premission:createReview)
-
+router.route('/store/store/:owner_id').get(getOwnerAllStores);
 router.route('/order/store/:storeID').get(getAllOrders);
-//(/orders/store/:id)=>owner (GET) (premssion : readOrders->get all orders for one store)
-//(/store/:store_id)=>admin (patch)
-//(/store/:store_id)=>owner (get,put,delete) (premssion:update+delete)
-
-router.route('/store/admin/dashboard').get(bearer, permissions('readPendingStores'),getPendingStores);
-//(/store/admin/dashboard)=> admin (GET) (premssion :readPendingStores)
-
-router.post('/wishlist').get(bearer,permissions('addProductesToWishList'),addProductsToWishlist); // pass the userID in the token
-//(/wishlist)=>user signed in (post) (premssion:create)
-module.exports=router;
+router
+  .route('/store/admin/dashboard')
+  .get(bearer, permissions('readPendingStores'), getPendingStores);
+router.post('/wishlist', addProductsToWishlist); // pass the userID in the token
 
 
+module.exports = router;
 
 // create payment history and send all orders for each store
 // router.route('/charge').post(pay);
@@ -88,16 +54,14 @@ module.exports=router;
 // get all carts for one user // add an item(product) to the cart
 // router.route('/cart/:userID').get(getCart);
 // router.route('/cart').post(addCart);s
-// get one item from one cart (shows the amount for the product) // patch(edit amount of the product) // delete 
+// get one item from one cart (shows the amount for the product) // patch(edit amount of the product) // delete
 // router.route('/cart/:id').get(getOneCart).patch(editCart).delete(deleteCart);
-
 
 // get payment history for one user
 // router.route('/payment/history/all/:user_id').get(getPaymentHistory);
 // get or delete one item form the payment history
 // router.route('/payment/history/:id').get(getOnePaymentHistory);
 // router.route('/payment/history/:id').delete(deletePaymentHistory);
-
 
 // get all products from all stores by USER
 // router.route('/products').get(getProducts);
@@ -131,16 +95,13 @@ module.exports=router;
 // router.route('/store/admin/dashboard').get(bearer, permissions('readPendingStores'),getPendingStores);
 // get all the stores owned by one owner by USER
 // router.route('/store/:owner_id').get(getOwnerAllStores);
-// get one store by store ID by USER/  edit one store by OWNER / edit one store status by ADMIN / delete one store by OWNER and ADMIN 
+// get one store by store ID by USER/  edit one store by OWNER / edit one store status by ADMIN / delete one store by OWNER and ADMIN
 // router.route('/store/:store_id').get(getOneStore);
 // router.route('/store/:store_id').put(bearer, permissions('update'), editStore).patch(bearer, permissions('updateStoreStatus'), editStore);
 // .delete(bearer, permissions('delete'), deleteStore);
 
-// get wish-list 
+// get wish-list
 // router.get('/wishlist/:userID',getWishlist);
 // router.post('/wishlist',addProductsToWishlist); // pass the userID in the token
 // router.put('/wishlist/user/:id',updateWishlist);
 // router.delete('/wishlist/user/:id',deleteFromWishlist);
-
-
-
